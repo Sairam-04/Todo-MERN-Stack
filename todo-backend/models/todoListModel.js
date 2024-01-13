@@ -20,6 +20,18 @@ const toDoList = mongoose.Schema({
             isCompleted:{
                 type: Boolean,
                 default: false
+            },
+            createdAt:{
+                type: Date,
+                default: Date.now
+            },
+            startDate:{
+                type: Date,
+                required: true
+            },
+            endDate:{
+                type: Date,
+                required: true
             }
         }
     ]
