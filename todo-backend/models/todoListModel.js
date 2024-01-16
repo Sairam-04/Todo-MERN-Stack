@@ -32,7 +32,8 @@ const toDoList = mongoose.Schema({
             endDate:{
                 type: Date,
                 required: true
-            }
+            },
+            tags:[]
         }
     ]
 })
