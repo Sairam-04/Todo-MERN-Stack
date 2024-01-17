@@ -6,7 +6,7 @@ import {Outlet} from "react-router-dom"
 
 const TaskMainComponent = () => {
   return (
-    <div className='maincomponent w-full h-screen flex text-white'>
+    <div className='maincomponent w-full h-screen flex text-white overflow-hidden font-poppins'>
       <div className='sidebardiv w-[20%] h-screen'>
         <SideBar />
       </div>
