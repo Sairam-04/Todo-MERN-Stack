@@ -2,7 +2,6 @@ import React from 'react'
 import Header from './Header'
 import MainContent from './MainContent'
 import SideBar from './SideBar'
-import {Outlet} from "react-router-dom"
 
 const TaskMainComponent = () => {
   return (
