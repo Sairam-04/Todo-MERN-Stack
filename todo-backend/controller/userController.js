@@ -3,10 +3,9 @@ const bcrypt = require("bcrypt");
 const sendToken = require("../utils/jwtToken");
 exports.registerUser = async (req, res, next) => {
 	try {
-		const { firstName,lastName,phoneNumber, email,securityQuestion, password } = req.body;
+		const { name,phoneNumber, email,securityQuestion, password } = req.body;
 		const user = new User({
-			firstName,
-			lastName,
+			name,
 			email,
 			phoneNumber,
 			password,
@@ -73,7 +72,7 @@ exports.updateUser = async (req, res, next) => {
 			})
 		}
 		const newUserData = {
-			firstName: req.body.name,
+			name: req.body.name,
 			email: req.body.email,
 			lastName: req.body.lastName,
 			phoneNumber: req.body.phoneNumber

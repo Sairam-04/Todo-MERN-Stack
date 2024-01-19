@@ -15,13 +15,7 @@ const securityQuestions = [
 ];
 
 const userSchema = new mongoose.Schema({
-  firstName: {
-    type: String,
-    required: [true, "Name is Required"],
-    maxLength: [30, "Name Cannot Exceed 30 characters"],
-    minLength: [5, "Name should have more than 5 characters"],
-  },
-  lastName: {
+  name: {
     type: String,
     required: [true, "Name is Required"],
     maxLength: [30, "Name Cannot Exceed 30 characters"],
