@@ -1,6 +1,17 @@
-import React from "react";
+import React,{useState} from "react";
 
-const ShowModal = ({ createTaskClick }) => {
+const CreateTaskForm = ({ createTaskClick }) => {
+    const [userData, setUserData] = useState({
+        name: "",
+        email:"",
+        phoneNumber:"",
+        password:"",
+        securityQuestion:{
+            question:"",
+            answer:""
+        },
+
+    })
     return (
         <>
             <div className="justify-center items-center flex overflow-x-hidden overflow-y-auto fixed inset-0 z-50 outline-none focus:outline-none">
@@ -16,7 +27,6 @@ const ShowModal = ({ createTaskClick }) => {
                                 X
                             </button>
                         </div>
-                        {/*body*/}
                         <div className="relative p-6 flex-auto h-[60vh] overflow-y-auto">
                             <div className="flex flex-col gap-6">
                                 <div className="relative h-11 w-full min-w-[200px]">
@@ -132,4 +142,4 @@ const ShowModal = ({ createTaskClick }) => {
     );
 };
 
-export default ShowModal;
+export default CreateTaskForm;

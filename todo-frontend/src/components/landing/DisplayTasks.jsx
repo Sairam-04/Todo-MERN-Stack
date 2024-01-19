@@ -1,7 +1,15 @@
 import React from "react";
 import Task from "./Task";
+import { useQuery } from 'react-query'
+import getService from "../../services/getService";
 
 const DisplayTasks = () => {
+    const { data, error, isLoading } = useQuery([
+        'tasks-data',
+        'http://localhost:5000/api/v1/get-todo-list'
+    ], getService);
+
+    // console.log(data)
     return (
 
         <div className="w-full flex flex-col gap-2 my-2">
@@ -24,14 +32,14 @@ const DisplayTasks = () => {
                     <div className="taskslist flex flex-col gap-3">
                         <Task />
                         <Task />
-                        
+
                     </div>
                 </div>
                 <div className="Completed w-[32%] h-full overflow-y-scroll">
 
                     <div className="taskslist flex flex-col gap-3">
                         <Task />
-                        
+
                     </div>
                 </div>
                 <div className="upcoming w-[32%] h-full overflow-y-scroll">

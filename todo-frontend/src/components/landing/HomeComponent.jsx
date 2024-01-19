@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import DisplayTasks from './DisplayTasks'
-import ShowModal from './ShowModal';
+import CreateTaskForm from './ShowModal';
 
 const HomeComponent = () => {
   const [createtaskbtn, setCreateTaskBtn] = useState(false);
@@ -14,7 +14,7 @@ const HomeComponent = () => {
           👋 Hello, Sai Ram
         </div>
         {
-          createtaskbtn ? <ShowModal createTaskClick={createTaskClick} /> : (
+          createtaskbtn ? <CreateTaskForm createTaskClick={createTaskClick} /> : (
             <div className='flex flex-col gap-3'>
               <div>
                 <button

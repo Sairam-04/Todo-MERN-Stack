@@ -33,6 +33,10 @@ const toDoList = mongoose.Schema({
                 type: Date,
                 required: true
             },
+            isStarred: {
+                type: Boolean,
+                default: false
+            },
             tags:[]
         }
     ]

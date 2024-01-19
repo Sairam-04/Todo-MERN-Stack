@@ -1,9 +1,13 @@
 import React, { useState } from 'react'
 
 const Settings = () => {
-  const [isEditable, setIsEditable ] = useState(false);
+  const [isEditable, setIsEditable] = useState(false);
   const isEditClicked = () => {
     setIsEditable(!isEditable);
+  }
+  const [isChangePassword, setIsChangePassword] = useState(false);
+  const isChangePasswordClick = () => {
+    setIsChangePassword(!isChangePassword)
   }
   const [user, setUser] = useState({
     firstName: "Sairam",
@@ -59,21 +63,54 @@ const Settings = () => {
             />
           </div>
         </div>
-
-        <div className='flex gap-5 w-full'>
-          <div className='flex flex-col gap-2 w-2/5'>
-            <div className='flex flex-col gap-2'>
-              <label> Password </label>
-              <input type='password' value={user.password} disabled={true}
-                className="py-2 text-sm text-white bg-[#2A2D33] disabled:opacity-50 rounded-lg px-2 focus:outline-none focus:bg-[#2A2D33] focus:text-white border border-[#6C717B]"
-              />
+        {
+          isChangePassword ? (
+            <div className='w-full flex flex-col gap-3'>
+              <div>
+                Security Question :
+              </div>
+              <div>
+                What is your favorite Color
+              </div>
+              <div className='flex gap-2 items-end'>
+                <div className='flex flex-col gap-2 w-2/5'>
+                  <label> Answer </label>
+                  <input type='text'
+                    //  value={} 
+                    //  disabled={!isEditable}
+                    className="py-2 text-sm text-white bg-[#2A2D33] disabled:opacity-50 rounded-lg px-2 focus:outline-none focus:bg-[#2A2D33] focus:text-white border border-[#6C717B]"
+                  />
+                </div>
+                <div className='flex gap-3'>
+                  <button
+                    onClick={()=>isChangePasswordClick()}
+                    className="bg-[#7864F4] hover:bg-[#6a54f8] text-white font-semibold text-sm py-2 px-4 rounded"
+                  >Save Password</button>
+                  <button
+                    onClick={()=>isChangePasswordClick()}
+                    className="bg-[#f46464] hover:bg-[#f85454] text-white font-semibold text-sm py-2 px-4 rounded"
+                  >Cancel</button>
+                </div>
+              </div>
             </div>
-            <div className='flex items-end text-xs text-sky-300 cursor-pointer'>
-              Change Password
+          ) : (
+            <div className='flex gap-5 w-full'>
+              <div className='flex flex-col gap-2 w-2/5'>
+                <div className='flex flex-col gap-2'>
+                  <label> Password </label>
+                  <input type='password' value={user.password} disabled={true}
+                    className="py-2 text-sm text-white bg-[#2A2D33] disabled:opacity-50 rounded-lg px-2 focus:outline-none focus:bg-[#2A2D33] focus:text-white border border-[#6C717B]"
+                  />
+                </div>
+                <div
+                  onClick={() => isChangePasswordClick()}
+                  className='flex items-end text-xs text-sky-300 cursor-pointer'>
+                  Change Password
+                </div>
+              </div>
             </div>
-          </div>
-
-        </div>
+          )
+        }
 
         <div className='flex justify-center pt-8'>
           <button className="bg-[#7864F4] hover:bg-[#6a54f8] text-white font-semibold text-sm py-2 px-4 rounded">
