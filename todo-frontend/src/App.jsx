@@ -9,15 +9,9 @@ import Settings from "./components/landing/Settings";
 import UserLoginComponent from "./components/login-signup/UserLoginComponent";
 import Login from "./components/login-signup/Login";
 import SignUp from "./components/login-signup/SignUp";
-import { UserDetails } from "./context-api/UserDetails";
 
 function App() {
-  const [patron, setPatron] = useState({});
-  const updatePatron = (newValue) => {
-    setPatron(newValue);
-  };
   return (
-    <UserDetails.Provider value={{patron, updatePatron}}>
       <Router>
         <Routes>
           <Route path="/" element={<UserLoginComponent />}>
@@ -34,7 +28,6 @@ function App() {
           </Route>
         </Routes>
       </Router>
-    </UserDetails.Provider>
   );
 }
 

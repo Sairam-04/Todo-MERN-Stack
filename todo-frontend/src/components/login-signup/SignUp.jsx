@@ -3,7 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import usePostService from "../../services/postService";
 import postService from "../../services/postService";
 import { setUser } from "../../utils/localStorage";
-import UserDetailsCustomHook from "../../context-api/UserDetailsCustomHook";
+// import UserDetailsCustomHook from "../../context-api/UserDetailsCustomHook";
 
 const securityQuestions = [
   "What is your mother's name?",
@@ -28,7 +28,7 @@ const SignUp = () => {
       answer: "",
     },
   });
-  const {patron, updatePatron} = UserDetailsCustomHook() 
+  // const {patron, updatePatron} = UserDetailsCustomHook() 
   const [userDataErrors, setUserDataErrors] = useState({});
   const [isSubmit, setIsSubmit] = useState(false);
   const handleChange = (e) => {
@@ -75,7 +75,6 @@ const SignUp = () => {
     if (!values.securityQuestion.answer) {
       errors.answer = "Answer to Security Question is Required";
     }
-    console.log(errors);
     return errors;
   };
 
@@ -97,7 +96,7 @@ const SignUp = () => {
         if (response?.data?.success) {
           const { token, user } = response.data;
           setUser(token);
-          updatePatron(user)
+          // updatePatron(user)
           navigate("/home");
         } else {
           alert("Something Went Wrong");

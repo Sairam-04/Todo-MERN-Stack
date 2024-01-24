@@ -20,7 +20,7 @@ exports.getAllTodos = async (req, res, next) => {
         const todo = await ToDoList.findOne({ user: user_id });
         if (!todo) {
             return res.status(200).json({
-                success: true,
+                success: false,
                 message: `You don't have any tasks created, create a new task`,
             });
         }

@@ -1,19 +1,49 @@
-import React,{useState} from "react";
+import React, { useState } from "react";
 
 const CreateTaskForm = ({ createTaskClick }) => {
-    const [userData, setUserData] = useState({
-        name: "",
-        email:"",
-        phoneNumber:"",
-        password:"",
-        securityQuestion:{
-            question:"",
-            answer:""
-        },
-
+    const [taskData, setTaskData] = useState({
+        title: "",
+        desc: "",
+        startDate: "",
+        endDate: "",
+        tags: [],
+        isStarred: ""
     })
+    
+
+    const [taskErrors, setTaskErrors] = useState({});
+    const validateTaskForm = (values) => {
+        const errors = {};
+        if (!values.title) {
+            errors.title = "Title is Required";
+        }
+        if (!values.desc) {
+            errors.desc = "Description is Required";
+        }
+        if (!values.startDate) {
+            errors.startDate = "Start Date is Required";
+        }
+        if (!values.endDate) {
+            errors.endDate = "End Date is Required";
+        }
+        return errors;
+    }
+
+    const handleChange = (e) => {
+        const { name, value } = e.target;
+        setTaskData((prevTask) => ({
+            ...prevTask,
+            [name]: value
+        }))
+    }
+
+    const SubmitTask = (e) => {
+        e.preventDefault();
+        console.log(taskData);
+        createTaskClick();
+    }
     return (
-        <>
+        <form onSubmit={SubmitTask}>
             <div className="justify-center items-center flex overflow-x-hidden overflow-y-auto fixed inset-0 z-50 outline-none focus:outline-none">
                 <div className="relative w-[40%] my-6 mx-auto max-w-3xl">
                     <div className="border-0 rounded-lg shadow-lg relative flex flex-col w-full bg-[#2A2D33] outline-none focus:outline-none">
@@ -31,6 +61,10 @@ const CreateTaskForm = ({ createTaskClick }) => {
                             <div className="flex flex-col gap-6">
                                 <div className="relative h-11 w-full min-w-[200px]">
                                     <input
+                                        name="title"
+                                        type="text"
+                                        value={taskData.title}
+                                        onChange={handleChange}
                                         placeholder="Title"
                                         className="peer h-full w-full border-b border-blue-gray-200 bg-transparent pt-4 pb-1.5 font-sans text-sm font-normal text-blue-gray-700 outline outline-0 transition-all placeholder-shown:border-blue-gray-200 focus:border-white focus:outline-0 disabled:border-0 disabled:bg-blue-gray-50 placeholder:opacity-0 focus:placeholder:opacity-100"
                                     />
@@ -40,6 +74,10 @@ const CreateTaskForm = ({ createTaskClick }) => {
                                 </div>
                                 <div className="relative h-20 w-full min-w-[200px]">
                                     <textarea
+                                        name="desc"
+                                        type="text"
+                                        value={taskData.desc}
+                                        onChange={handleChange}
                                         placeholder="Desc"
                                         className="peer h-full w-full border-b border-blue-gray-200 bg-transparent pt-4 pb-1.5 font-sans text-sm font-normal text-blue-gray-700 outline outline-0 transition-all placeholder-shown:border-blue-gray-200 focus:border-white focus:outline-0 disabled:border-0 disabled:bg-blue-gray-50 placeholder:opacity-0 focus:placeholder:opacity-100"
                                     />
@@ -49,7 +87,10 @@ const CreateTaskForm = ({ createTaskClick }) => {
                                 </div>
                                 <div className="relative h-11 w-full min-w-[200px]">
                                     <input
+                                        name="startDate"
+                                        value={taskData.startDate}
                                         placeholder="Title"
+                                        onChange={handleChange}
                                         type="Date"
                                         className="peer h-full w-full border-b border-blue-gray-200 bg-transparent pt-4 pb-1.5 font-sans text-sm font-normal text-blue-gray-700 outline outline-0 transition-all placeholder-shown:border-blue-gray-200 focus:border-white focus:outline-0 disabled:border-0 disabled:bg-blue-gray-50 placeholder:opacity-0 focus:placeholder:opacity-100"
                                     />
@@ -59,7 +100,10 @@ const CreateTaskForm = ({ createTaskClick }) => {
                                 </div>
                                 <div className="relative h-11 w-full min-w-[200px]">
                                     <input
+                                        name="endDate"
+                                        value={taskData.endDate}
                                         placeholder="Title"
+                                        onChange={handleChange}
                                         type="Date"
                                         className="peer h-full w-full border-b border-blue-gray-200 bg-transparent pt-4 pb-1.5 font-sans text-sm font-normal text-blue-gray-700 outline outline-0 transition-all placeholder-shown:border-blue-gray-200 focus:border-white focus:outline-0 disabled:border-0 disabled:bg-blue-gray-50 placeholder:opacity-0 focus:placeholder:opacity-100"
                                     />
@@ -115,6 +159,7 @@ const CreateTaskForm = ({ createTaskClick }) => {
                                     </div>
                                     <div className="relative h-11 w-full min-w-[200px]">
                                         <input
+                                            
                                             placeholder="Tags"
                                             className="peer h-full w-full border-b border-blue-gray-200 bg-transparent pt-4 pb-1.5 font-sans text-sm font-normal text-blue-gray-700 outline outline-0 transition-all placeholder-shown:border-blue-gray-200 focus:border-white focus:outline-0 disabled:border-0 disabled:bg-blue-gray-50 placeholder:opacity-0 focus:placeholder:opacity-100"
                                         />
@@ -126,19 +171,19 @@ const CreateTaskForm = ({ createTaskClick }) => {
                             </div>
                         </div>
                         <div className="flex items-center justify-end p-2 border-t border-solid border-blueGray-200 rounded-b">
-                            <button
+                            <input
                                 className="bg-emerald-500 text-white active:bg-emerald-600 font-bold uppercase text-sm px-4 py-2 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
-                                type="button"
-                                onClick={() => createTaskClick()}
-                            >
-                                Save Changes
-                            </button>
+                                type="submit"
+                                value={"Submit"}
+                                // onClick={() => createTaskClick()}
+                           />
+                               
                         </div>
                     </div>
                 </div>
             </div>
             <div className="opacity-25 fixed inset-0 z-40 bg-black"></div>
-        </>
+        </form>
     );
 };
 

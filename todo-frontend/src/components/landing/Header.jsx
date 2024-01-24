@@ -1,9 +1,31 @@
 import React, { useState, useEffect } from 'react'
 import { useLocation } from 'react-router-dom'
+import { endpoint } from '../constants/url';
+import getService from '../../services/getService';
 
 const Header = () => {
   const location = useLocation();
   const [title, setTitle] = useState('');
+  const [initial, setInitial] = useState('');
+  const getUserDetails = async () => {
+    try {
+      const response = await getService(
+        "http://localhost:5000/api/v1/me",
+        true
+      );
+      if (response && response.statusText === "OK") {
+        if (response?.data?.success) {
+          setInitial(response.data?.user?.name);
+        } else {
+          alert("Something Went Wrong");
+        }
+      } else {
+        alert("Something Went Wrong");
+      }
+    } catch (err) {
+      console.log(err);
+    }
+  }
   useEffect(() => {
     if (location.pathname === '/home') {
       setTitle('Home');
@@ -16,6 +38,7 @@ const Header = () => {
     } else {
       setTitle('Home');
     }
+    getUserDetails();
   }, [location.pathname]);
 
   return (
@@ -37,7 +60,11 @@ const Header = () => {
         </div>
         <div className="avatar placeholder cursor-pointer">
           <div className="bg-white text-black rounded-full w-8 h-8 flex justify-center items-center">
-            <span className="text-xl font-bold">D</span>
+            <span className="text-xl font-bold">
+             {
+               initial[0] || "NA"
+             }
+            </span>
           </div>
         </div>
       </div>

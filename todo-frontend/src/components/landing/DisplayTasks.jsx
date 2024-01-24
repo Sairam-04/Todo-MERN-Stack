@@ -1,16 +1,9 @@
 import React from "react";
 import Task from "./Task";
-import { useQuery } from 'react-query'
 import getService from "../../services/getService";
 import postService from "../../services/postService";
 
 const DisplayTasks = () => {
-    const { data, error, isLoading } = useQuery([
-        'tasks-data',
-        'http://localhost:5000/api/v1/get-todo-list',
-    ], postService);
-
-    // console.log(data)
     return (
 
         <div className="w-full flex flex-col gap-2 my-2">
