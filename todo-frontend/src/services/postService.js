@@ -58,6 +58,7 @@ const postService = async (url, requestData, includeHeaders) => {
             }
         } : {}
         const response = await axios.post(url, requestData, config);
+        console.log(response)
         return response;
     } catch (err) {
         return {

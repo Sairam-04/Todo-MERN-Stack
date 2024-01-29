@@ -1,15 +1,19 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
+import postService from "../../services/postService";
+import { endpoint } from "../constants/url";
 
-const CreateTaskForm = ({ createTaskClick }) => {
+const CreateTaskForm = ({ flag,newFlag, createTaskClick, showForm }) => {
     const [taskData, setTaskData] = useState({
         title: "",
         desc: "",
         startDate: "",
         endDate: "",
         tags: [],
-        isStarred: ""
+        isStarred: false
     })
-    
+    const [isSubmit, setIsSubmit] = useState(false);
+    const [tag, setTag] = useState("");
+    const [tagsList, setTagsList] = useState([])
 
     const [taskErrors, setTaskErrors] = useState({});
     const validateTaskForm = (values) => {
@@ -23,9 +27,28 @@ const CreateTaskForm = ({ createTaskClick }) => {
         if (!values.startDate) {
             errors.startDate = "Start Date is Required";
         }
+        //  else {
+        //     // Additional check for valid start date if needed
+        //     const startDate = new Date(values.startDate);
+        //     const currentDate = new Date();
+
+        //     if (startDate < currentDate) {
+        //         errors.startDate = "Start Date must be in the future";
+        //     }
+        // }
+
         if (!values.endDate) {
             errors.endDate = "End Date is Required";
         }
+        // else {
+        //     // Additional check for valid end date if needed
+        //     const endDate = new Date(values.endDate);
+        //     const startDate = new Date(values.startDate);
+
+        //     if (endDate < startDate) {
+        //         errors.endDate = "End Date must be after Start Date";
+        //     }
+        // }
         return errors;
     }
 
@@ -37,13 +60,74 @@ const CreateTaskForm = ({ createTaskClick }) => {
         }))
     }
 
-    const SubmitTask = (e) => {
-        e.preventDefault();
-        console.log(taskData);
-        createTaskClick();
+    const SubmitTask = () => {
+        setTaskErrors(validateTaskForm(taskData));
+        setIsSubmit(true);
+        // createTaskClick();
     }
+    const handleKeyDown = (e) => {
+        // Prevent form submission on Enter key press
+        if (e.key === "Enter") {
+            e.preventDefault();
+        }
+    };
+
+    const onTaskChange = (e) => {
+        setTag(e.target.value);
+    }
+    const addTask = (e) => {
+        if (e.key === "Enter") {
+            setTagsList(prevTag => [tag, ...prevTag]);
+            setTag("");
+        }
+    }
+
+    const removeTag = (index) => {
+        const newarr = tagsList.filter((item, i) => i !== index);
+        setTagsList(newarr);
+    }
+
+    const createNewTask = async () => {
+        try {
+            const updatedTaskData = { ...taskData, tags: tagsList };
+            const url = newFlag ? `${endpoint}/new-todo` :`${endpoint}/add-todo`;
+            const DATA = newFlag ? {
+                todolist: [
+                    updatedTaskData
+                ]
+            } : updatedTaskData;
+            const response = await postService(
+                url,
+                DATA,
+                true
+            );
+            if (response && response.statusText === "OK") {
+                if (response?.data?.success) {
+                    console.log("Success");
+                    if (flag) {
+                        showForm();
+                    }
+                    createTaskClick();
+                } else {
+                    alert("Something Went Wrong");
+                }
+            } else {
+                alert("Something Went Wrong");
+            }
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
+    useEffect(() => {
+        if (Object.keys(taskErrors).length === 0 && isSubmit) {
+            createNewTask();
+        }
+    }, [isSubmit, taskErrors]);
+
     return (
-        <form onSubmit={SubmitTask}>
+        <>
+
             <div className="justify-center items-center flex overflow-x-hidden overflow-y-auto fixed inset-0 z-50 outline-none focus:outline-none">
                 <div className="relative w-[40%] my-6 mx-auto max-w-3xl">
                     <div className="border-0 rounded-lg shadow-lg relative flex flex-col w-full bg-[#2A2D33] outline-none focus:outline-none">
@@ -52,7 +136,10 @@ const CreateTaskForm = ({ createTaskClick }) => {
                             <h3 className="text-xl font-semibold">Create Task</h3>
                             <button
                                 className="bg-none p-1 ml-auto border-0 text-red-600 float-right text-2xl leading-none font-semibold hover:bg-red-600 hover:text-white hover:px-1 hover:rounded-md"
-                                onClick={() => createTaskClick()}
+                                onClick={() => {
+                                    showForm()
+                                    createTaskClick()
+                                }}
                             >
                                 X
                             </button>
@@ -114,52 +201,26 @@ const CreateTaskForm = ({ createTaskClick }) => {
 
                                 <div className="tags flex flex-col gap-5">
                                     <div className="flex flex-wrap w-full h-auto border border-yellow-100 p-2 gap-1">
-                                        <div
-                                            className="py-0.5 pl-2 bg-[#7864F4] text-white rounded-xl  justify-between text-xs flex gap-2"
-                                        >
-                                            <div>jnjsndjnsd</div>
-                                            <div className="bg-white text-gray-900 flex items-center justify-center rounded-full w-4">X</div>
-                                        </div>
-                                        <div
-                                            className="py-0.5 pl-3 bg-[#7864F4] text-white rounded-xl  justify-between text-xs flex gap-2"
-                                        >
-                                            <div>One</div>
-                                            <div className="bg-white text-gray-900 flex items-center justify-center rounded-full w-4">X</div>
-                                        </div>
-                                        <div
-                                            className="py-0.5 pl-3 bg-[#7864F4] text-white rounded-xl  justify-between text-xs flex gap-2"
-                                        >
-                                            <div>One</div>
-                                            <div className="bg-white text-gray-900 flex items-center justify-center rounded-full w-4">X</div>
-                                        </div>
-                                        <div
-                                            className="py-0.5 pl-3 bg-[#7864F4] text-white rounded-xl  justify-between text-xs flex gap-2"
-                                        >
-                                            <div>One</div>
-                                            <div className="bg-white text-gray-900 flex items-center justify-center rounded-full w-4">X</div>
-                                        </div>
-                                        <div
-                                            className="py-0.5 pl-3 bg-[#7864F4] text-white rounded-xl  justify-between text-xs flex gap-2"
-                                        >
-                                            <div>One</div>
-                                            <div className="bg-white text-gray-900 flex items-center justify-center rounded-full w-4">X</div>
-                                        </div>
-                                        <div
-                                            className="py-0.5 pl-3 bg-[#7864F4] text-white rounded-xl  justify-between text-xs flex gap-2"
-                                        >
-                                            <div>One</div>
-                                            <div className="bg-white text-gray-900 flex items-center justify-center rounded-full w-4">X</div>
-                                        </div>
-                                        <div
-                                            className="py-0.5 pl-3 bg-[#7864F4] text-white rounded-xl  justify-between text-xs flex gap-2"
-                                        >
-                                            <div>One</div>
-                                            <div className="bg-white text-gray-900 flex items-center justify-center rounded-full w-4">X</div>
-                                        </div>
+                                        {
+                                            tagsList.map((ele, ind) => (
+                                                <div
+                                                    key={ind}
+                                                    className="py-0.5 pl-2 bg-[#7864F4] text-white rounded-xl  justify-between text-xs flex gap-2"
+                                                >
+                                                    <div>{ele}</div>
+                                                    <div
+                                                        onClick={() => removeTag(ind)}
+                                                        className="bg-white text-gray-900 flex items-center justify-center rounded-full w-4 cursor-pointer">X</div>
+                                                </div>
+                                            ))
+                                        }
                                     </div>
                                     <div className="relative h-11 w-full min-w-[200px]">
                                         <input
-                                            
+                                            name="tag"
+                                            value={tag}
+                                            onChange={onTaskChange}
+                                            onKeyDown={addTask}
                                             placeholder="Tags"
                                             className="peer h-full w-full border-b border-blue-gray-200 bg-transparent pt-4 pb-1.5 font-sans text-sm font-normal text-blue-gray-700 outline outline-0 transition-all placeholder-shown:border-blue-gray-200 focus:border-white focus:outline-0 disabled:border-0 disabled:bg-blue-gray-50 placeholder:opacity-0 focus:placeholder:opacity-100"
                                         />
@@ -171,19 +232,19 @@ const CreateTaskForm = ({ createTaskClick }) => {
                             </div>
                         </div>
                         <div className="flex items-center justify-end p-2 border-t border-solid border-blueGray-200 rounded-b">
-                            <input
+                            <button
                                 className="bg-emerald-500 text-white active:bg-emerald-600 font-bold uppercase text-sm px-4 py-2 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
-                                type="submit"
-                                value={"Submit"}
-                                // onClick={() => createTaskClick()}
-                           />
-                               
+                                type="button"
+                                onClick={() => SubmitTask()}
+                            >
+                                Submit
+                            </button>
                         </div>
                     </div>
                 </div>
             </div>
             <div className="opacity-25 fixed inset-0 z-40 bg-black"></div>
-        </form>
+        </>
     );
 };
 

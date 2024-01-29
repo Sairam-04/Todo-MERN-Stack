@@ -4,6 +4,7 @@ const User = require("../models/userModel")
 exports.getAllTodos = async (req, res, next) => {
     try {
         const user_id = req.user._id;
+        
         if (!user_id) {
             return res.status(404).json({
                 success: false,
@@ -20,7 +21,7 @@ exports.getAllTodos = async (req, res, next) => {
         const todo = await ToDoList.findOne({ user: user_id });
         if (!todo) {
             return res.status(200).json({
-                success: false,
+                success: true,
                 message: `You don't have any tasks created, create a new task`,
             });
         }

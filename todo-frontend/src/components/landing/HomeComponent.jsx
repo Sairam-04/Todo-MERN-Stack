@@ -12,6 +12,8 @@ const HomeComponent = () => {
   }
   const [name, setName] = useState("");
   const [taskList, setTaskList] = useState([]);
+  const [loading, setLoading] = useState(true); // New loading state
+
   const getUserDetails = async () => {
     try {
       const response = await getService(
@@ -41,6 +43,7 @@ const HomeComponent = () => {
       if (response && response.statusText === "OK") {
         if (response?.data?.success) {
           setTaskList(response.data?.todolist);
+          setLoading(false); // Set loading to false after data is fetched
         } else {
         }
       } else {
@@ -52,9 +55,14 @@ const HomeComponent = () => {
   }
 
   useEffect(() => {
-    getUserDetails();
     getAllTasksList();
+    getUserDetails();
   }, [])
+
+  if (loading) {
+    return <div>Loading...</div>; // Render loading indicator while data is being fetched
+  }
+
   return (
     <>
       <div className='homecomponent py-5 flex flex-col gap-3'>
@@ -63,7 +71,7 @@ const HomeComponent = () => {
         </div>
         {
           (taskList && taskList.length === 0) ? (
-            createtaskbtn ? <CreateTaskForm createTaskClick={createTaskClick} /> : (
+            createtaskbtn ? <CreateTaskForm flag={false} newFlag={true} createTaskClick={createTaskClick} /> : (
               <div className='flex flex-col gap-3'>
                 <div>
                   <button
@@ -78,7 +86,7 @@ const HomeComponent = () => {
               </div>
             )
           ) : (
-            <HomeTasksComponent />
+            <HomeTasksComponent createTaskClick={createTaskClick} taskList={taskList} />
           )
         }
       </div>
