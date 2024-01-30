@@ -6,7 +6,6 @@ const DisplayTasks = ({ taskList }) => {
     const todayDate = new Date();
     const completedList = taskList && taskList.filter(element => element.isCompleted === true);
     const inprogressList = taskList && taskList.filter(element => {
-        const startDate = new Date(element.startDate);
         const endDate = new Date(element.endDate);
         return endDate > todayDate && element.isCompleted === false;
     });
@@ -39,9 +38,12 @@ const DisplayTasks = ({ taskList }) => {
                 <div className="inprogress w-[32%] h-full overflow-y-scroll">
                     <div className="taskslist flex flex-col gap-3">
                         {
-                            inprogressList.map((element, index) => (
-                                <Task key={index} task={element} />
-                            ))
+                            inprogressList.length === 0 ? <div className="pl-20">
+                                No InProgress Tasks
+                            </div> :
+                                inprogressList.map((element, index) => (
+                                    <Task key={index} task={element} />
+                                ))
                         }
 
                     </div>
@@ -50,9 +52,12 @@ const DisplayTasks = ({ taskList }) => {
 
                     <div className="taskslist flex flex-col gap-3">
                         {
-                            completedList.map((element, index) => (
-                                <Task key={index} task={element} />
-                            ))
+                            completedList.length === 0 ? <div className="pl-20">
+                                No Completed Tasks
+                            </div> :
+                                completedList.map((element, index) => (
+                                    <Task key={index} task={element} />
+                                ))
                         }
 
                     </div>
@@ -61,9 +66,12 @@ const DisplayTasks = ({ taskList }) => {
 
                     <div className="taskslist flex flex-col gap-3">
                         {
-                            pendingList.map((element, index) => (
-                                <Task key={index} task={element} />
-                            ))
+                            pendingList.length === 0 ? <div>
+                                No Pending Tasks
+                            </div> :
+                                pendingList.map((element, index) => (
+                                    <Task key={index} task={element} />
+                                ))
                         }
                     </div>
                 </div>

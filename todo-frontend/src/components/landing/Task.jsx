@@ -1,58 +1,125 @@
-import React from "react";
+import React, { useState } from "react";
 import { useLocation } from "react-router-dom"
+import putService from "../../services/putService";
+import { endpoint } from "../constants/url";
 
 const Task = ({ task }) => {
     const location = useLocation();
+    const todayDate = new Date();
+    const inprogress = task && new Date(task.endDate) > todayDate && task.isCompleted === false;
+    const completed = task && task.isCompleted === true;
+    const pending = task && task.isCompleted === false && new Date(task.endDate) < todayDate;
+    const star = task && task.isStarred === true;
+    const task_id = task && task._id;
+    const [starATask, setStarATask] = useState(false);
+    const [completeATask, setCompleteATask] = useState(false);
+    const editTask = () => {
+
+    }
+
+    const deleteTask = () => {
+
+    }
+
+    const starTask = async () => {
+        try {
+            if (!star) {
+                const response = await putService(
+                    `${endpoint}/update-todo/${task_id}`,
+                    {
+                        isStarred: true
+                    },
+                    true
+                )
+                if (response && response.statusText === "OK") {
+                    if (response.data?.success) {
+                        setStarATask(true)
+                        alert("Starred the Task")
+                    }
+                } else {
+                    console.log("Something went wrong");
+                }
+            } else {
+                alert("Task is Already Starred")
+            }
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
+    const completeTask = async () => {
+        try {
+            if (!completed) {
+                const response = await putService(
+                    `${endpoint}/update-todo/${task_id}`,
+                    {
+                        isCompleted: true
+                    },
+                    true
+                )
+                if (response && response.statusText === "OK") {
+                    if (response.data?.success) {
+                        setCompleteATask(true)
+                        alert("Marked the Task as Completed")
+                    }
+                } else {
+                    console.log("Something went wrong");
+                }
+            } else {
+                alert("Task is Already Completed")
+            }
+        } catch (error) {
+            console.log(error);
+        }
+    }
     return (
         <div className="flex text-sm bg-[#323539] shadow-md">
             {
-                (location.pathname.includes("starred")) && (
-                    <div className="w-2 bg-green-600 rounded-lg"></div>
+                location.pathname.includes("starred") && (
+                    <>
+                        {inprogress && <div className="w-2 bg-[#3C79D6] rounded-lg"></div>}
+                        {completed && <div className="w-2 bg-[#55DD4A] rounded-lg"></div>}
+                        {pending && <div className="w-2 bg-[#ff5454c9] rounded-lg"></div>}
+                    </>
                 )
             }
 
             <div className="flex flex-col gap-1.5 py-2 px-4">
                 <div className="title text-lg font-semibold leading-tight">
                     {task && task?.title}
-                    {/* Creating Landing Page UI Design */}
                 </div>
                 <ul className="tags flex gap-3 text-xs">
                     {
                         task && task.tags && (
-                            task.tags.map((ele, ind)=>(
+                            task.tags.map((ele, ind) => (
                                 <li key={ind} className="py-0.5 px-3 bg-[#7864F4] text-white rounded-xl">{ele}</li>
 
                             ))
                         )
                     }
-                    {/* <li className="py-0.5 px-3 bg-[#7864F4] text-white rounded-xl">One</li>
-                    <li className="py-0.5 px-3 bg-[#7864F4] text-white rounded-xl">Two</li>
-                    <li className="py-0.5 px-3 bg-[#7864F4] text-white rounded-xl">Three</li> */}
                 </ul>
                 <div className="desc text-xs text-justify">
                     {task && task.desc}
-                    {/* Lorem ipsum dolor sit amet consectetur adipisicing elit. Alias corrupti
-                    quibusdam natus ea. Sapiente ipsa adipisci, molestias suscipit nostrum
-                    commodi molestiae non natus eligendi nesciunt, quo, distinctio nemo
-                    rerum porro necessitatibus recusandae quidem officia eum quod qui sint
-                    beatae mollitia. */}
                 </div>
                 <div className="startdate flex gap-2">
                     <i className="bi bi-calendar2-week-fill"></i>
-                    {/* <span>Date 20 20 20</span> */}
                     {<span>{task && task.startDate}</span>}
                 </div>
                 <div className="enddate flex gap-2">
                     <i className="bi bi-calendar2-week-fill"></i>
-                    {/* <span>Date 20 20 20</span> */}
-                    {<span>{ task && task.endDate}</span>}
+                    {<span>{task && task.endDate}</span>}
 
                 </div>
                 <div className="bottomPart flex border-t pt-2 justify-end gap-3">
                     <i className="bi bi-pencil-square cursor-pointer"></i>
                     <i className="bi bi-trash-fill cursor-pointer"></i>
-                    <i className="bi bi-star-fill text-yellow-500 cursor-pointer"></i>
-                    <i className="bi bi-check-circle-fill text-green-600 cursor-pointer"></i>
+                    <i
+                        onClick={() => starTask()}
+                        className={`bi bi-star-fill cursor-pointer hover:scale-[1.5] ${starATask || star ? "text-yellow-500" : "text-white"}`}></i>
+                    <i
+                        onClick={()=> completeTask()}
+                        className={`bi bi-check-circle-fill cursor-pointer hover:scale-[1.5] ${completeATask || completed ? "text-green-600" : "text-white"}`}
+                    > </i>
                 </div>
             </div>
         </div>

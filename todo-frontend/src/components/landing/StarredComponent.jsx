@@ -65,4 +65,4 @@ const StarredComponent = () => {
   )
 }
 
-export default StarredComponent
+export default StarredComponent;
