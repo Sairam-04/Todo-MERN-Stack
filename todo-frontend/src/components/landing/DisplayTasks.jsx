@@ -35,10 +35,10 @@ const DisplayTasks = ({ taskList }) => {
             <div className={`w-full flex justify-evenly py-2 
                 ${location.pathname.includes("my-tasks") ? "h-[80vh]" : "h-[60vh]"}
             `} >
-                <div className="inprogress w-[32%] h-full overflow-y-scroll">
+                <div className="inprogress w-[32%] h-full overflow-y-auto">
                     <div className="taskslist flex flex-col gap-3">
                         {
-                            inprogressList.length === 0 ? <div className="pl-20">
+                            inprogressList.length === 0 ? <div className="">
                                 No InProgress Tasks
                             </div> :
                                 inprogressList.map((element, index) => (
@@ -48,11 +48,11 @@ const DisplayTasks = ({ taskList }) => {
 
                     </div>
                 </div>
-                <div className="Completed w-[32%] h-full overflow-y-scroll">
+                <div className="Completed w-[32%] h-full overflow-y-auto">
 
                     <div className="taskslist flex flex-col gap-3">
                         {
-                            completedList.length === 0 ? <div className="pl-20">
+                            completedList.length === 0 ? <div className="">
                                 No Completed Tasks
                             </div> :
                                 completedList.map((element, index) => (
@@ -62,7 +62,7 @@ const DisplayTasks = ({ taskList }) => {
 
                     </div>
                 </div>
-                <div className="upcoming w-[32%] h-full overflow-y-scroll">
+                <div className="upcoming w-[32%] h-full overflow-y-auto">
 
                     <div className="taskslist flex flex-col gap-3">
                         {

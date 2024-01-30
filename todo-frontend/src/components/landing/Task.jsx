@@ -2,6 +2,8 @@ import React, { useState } from "react";
 import { useLocation } from "react-router-dom"
 import putService from "../../services/putService";
 import { endpoint } from "../constants/url";
+import deleteService from "../../services/deleteService";
+import EditTaskForm from "./EditTaskForm";
 
 const Task = ({ task }) => {
     const location = useLocation();
@@ -13,12 +15,28 @@ const Task = ({ task }) => {
     const task_id = task && task._id;
     const [starATask, setStarATask] = useState(false);
     const [completeATask, setCompleteATask] = useState(false);
-    const editTask = () => {
-
+    const [editTaskClick, setEditTaskClick] = useState(false);
+    
+    const editTaskClc = () => {
+        setEditTaskClick(!editTaskClick)
     }
 
-    const deleteTask = () => {
-
+    const deleteTask = async () => {
+        try {
+            const response = await deleteService(
+                `${endpoint}/delete-todo/${task_id}`,
+                true
+            )
+            if (response && response.statusText === "OK") {
+                if (response.data?.success) {
+                    alert(`Deleted the Task : ${task && task.title} `)
+                }
+            } else {
+                console.log("Something went wrong");
+            }
+        } catch (error) {
+            console.log(error);
+        }
     }
 
     const starTask = async () => {
@@ -73,56 +91,68 @@ const Task = ({ task }) => {
         }
     }
     return (
-        <div className="flex text-sm bg-[#323539] shadow-md">
-            {
-                location.pathname.includes("starred") && (
-                    <>
-                        {inprogress && <div className="w-2 bg-[#3C79D6] rounded-lg"></div>}
-                        {completed && <div className="w-2 bg-[#55DD4A] rounded-lg"></div>}
-                        {pending && <div className="w-2 bg-[#ff5454c9] rounded-lg"></div>}
-                    </>
-                )
-            }
+        <>
+            <div className="flex text-sm w-full bg-[#323539] shadow-md">
+                {
+                    location.pathname.includes("starred") && (
+                        <>
+                            {inprogress && <div className="w-2 bg-[#3C79D6] rounded-lg"></div>}
+                            {completed && <div className="w-2 bg-[#55DD4A] rounded-lg"></div>}
+                            {pending && <div className="w-2 bg-[#ff5454c9] rounded-lg"></div>}
+                        </>
+                    )
+                }
 
-            <div className="flex flex-col gap-1.5 py-2 px-4">
-                <div className="title text-lg font-semibold leading-tight">
-                    {task && task?.title}
-                </div>
-                <ul className="tags flex gap-3 text-xs">
-                    {
-                        task && task.tags && (
-                            task.tags.map((ele, ind) => (
-                                <li key={ind} className="py-0.5 px-3 bg-[#7864F4] text-white rounded-xl">{ele}</li>
+                <div className="flex flex-col gap-1.5 py-2 px-4">
+                    <div className="title text-lg font-semibold leading-tight">
+                        {task && task?.title}
+                    </div>
+                    <ul className="tags flex gap-2 text-xs w-full flex-wrap">
+                        {
+                            task && task.tags && (
+                                task.tags.map((ele, ind) => (
+                                    <li key={ind} className="py-0.5 px-3 bg-[#7864F4] text-white rounded-xl">{ele}</li>
 
-                            ))
-                        )
-                    }
-                </ul>
-                <div className="desc text-xs text-justify">
-                    {task && task.desc}
-                </div>
-                <div className="startdate flex gap-2">
-                    <i className="bi bi-calendar2-week-fill"></i>
-                    {<span>{task && task.startDate}</span>}
-                </div>
-                <div className="enddate flex gap-2">
-                    <i className="bi bi-calendar2-week-fill"></i>
-                    {<span>{task && task.endDate}</span>}
+                                ))
+                            )
+                        }
+                    </ul>
+                    <div className="desc text-xs text-justify w-full break-words">
+                        {task && task.desc}
+                    </div>
+                    <div className="startdate flex gap-2">
+                        <i className="bi bi-calendar2-week-fill"></i>
+                        {<span>{task && task.startDate}</span>}
+                    </div>
+                    <div className="enddate flex gap-2">
+                        <i className="bi bi-calendar2-week-fill"></i>
+                        {<span>{task && task.endDate}</span>}
 
-                </div>
-                <div className="bottomPart flex border-t pt-2 justify-end gap-3">
-                    <i className="bi bi-pencil-square cursor-pointer"></i>
-                    <i className="bi bi-trash-fill cursor-pointer"></i>
-                    <i
-                        onClick={() => starTask()}
-                        className={`bi bi-star-fill cursor-pointer hover:scale-[1.5] ${starATask || star ? "text-yellow-500" : "text-white"}`}></i>
-                    <i
-                        onClick={()=> completeTask()}
-                        className={`bi bi-check-circle-fill cursor-pointer hover:scale-[1.5] ${completeATask || completed ? "text-green-600" : "text-white"}`}
-                    > </i>
+                    </div>
+                    <div className="bottomPart flex border-t pt-2 justify-end gap-3">
+                        <i className="bi bi-pencil-square cursor-pointer hover:scale-[1.5]"
+                            onClick={() => editTaskClc()}
+                        ></i>
+                        <i className="bi bi-trash-fill cursor-pointer hover:scale-[1.5]"
+                            onClick={() => deleteTask()}
+                        ></i>
+                        <i
+                            onClick={() => starTask()}
+                            className={`bi bi-star-fill cursor-pointer hover:scale-[1.5] ${starATask || star ? "text-yellow-500" : "text-white"}`}></i>
+                        <i
+                            onClick={() => completeTask()}
+                            className={`bi bi-check-circle-fill cursor-pointer hover:scale-[1.5] ${completeATask || completed ? "text-green-600" : "text-white"}`}
+                        > </i>
+                    </div>
                 </div>
             </div>
-        </div>
+
+            {
+                editTaskClick && (
+                    <EditTaskForm taskcontent={task} editTaskClick={editTaskClc} />
+                )
+            }
+        </>
     );
 };
 

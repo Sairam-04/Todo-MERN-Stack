@@ -1,21 +1,13 @@
-import React, { useEffect, useState } from "react";
-import postService from "../../services/postService";
-import { endpoint } from "../constants/url";
+import React, { useState, useEffect } from 'react'
+import putService from '../../services/putService';
+import { endpoint } from '../constants/url';
 
-const CreateTaskForm = ({ flag,newFlag, createTaskClick, showForm }) => {
-    const [taskData, setTaskData] = useState({
-        title: "",
-        desc: "",
-        startDate: "",
-        endDate: "",
-        tags: [],
-        isStarred: false
-    })
-    const [isSubmit, setIsSubmit] = useState(false);
-    const [tag, setTag] = useState("");
-    const [tagsList, setTagsList] = useState([])
-
+const EditTaskForm = ({ taskcontent, editTaskClick, taskid }) => {
+    const [taskData, setTaskData] = useState(taskcontent)
     const [taskErrors, setTaskErrors] = useState({});
+    const [tag, setTag] = useState("");
+    const [tagsList, setTagsList] = useState(taskData?.tags || [])
+    const [isSubmit, setIsSubmit] = useState(false);
     const validateTaskForm = (values) => {
         const errors = {};
         if (!values.title) {
@@ -60,18 +52,6 @@ const CreateTaskForm = ({ flag,newFlag, createTaskClick, showForm }) => {
         }))
     }
 
-    const SubmitTask = () => {
-        setTaskErrors(validateTaskForm(taskData));
-        setIsSubmit(true);
-        // createTaskClick();
-    }
-    const handleKeyDown = (e) => {
-        // Prevent form submission on Enter key press
-        if (e.key === "Enter") {
-            e.preventDefault();
-        }
-    };
-
     const onTaskChange = (e) => {
         setTag(e.target.value);
     }
@@ -87,27 +67,24 @@ const CreateTaskForm = ({ flag,newFlag, createTaskClick, showForm }) => {
         setTagsList(newarr);
     }
 
-    const createNewTask = async () => {
+    const SubmitTask = () => {
+        setTaskErrors(validateTaskForm(taskData));
+        setIsSubmit(true);
+     
+    }
+
+    const EditTask = async () =>{
         try {
             const updatedTaskData = { ...taskData, tags: tagsList };
-            const url = newFlag ? `${endpoint}/new-todo` :`${endpoint}/add-todo`;
-            const DATA = newFlag ? {
-                todolist: [
-                    updatedTaskData
-                ]
-            } : updatedTaskData;
-            const response = await postService(
-                url,
-                DATA,
+            const response = await putService(
+                `${endpoint}/update-todo/${taskData?._id}`,
+                updatedTaskData,
                 true
-            );
+            )
             if (response && response.statusText === "OK") {
-                if (response?.data?.success) {
-                    if (flag) {
-                        showForm();
-                    }
-                    createTaskClick();
-                    alert("Created A Task")
+                if (response?.data?.success) {                    
+                    alert("Updated a Task Successfully");
+                    editTaskClick()
                 } else {
                     alert("Something Went Wrong");
                 }
@@ -115,13 +92,14 @@ const CreateTaskForm = ({ flag,newFlag, createTaskClick, showForm }) => {
                 alert("Something Went Wrong");
             }
         } catch (error) {
-            console.log(error);
+            console.log(error)
         }
     }
 
+
     useEffect(() => {
         if (Object.keys(taskErrors).length === 0 && isSubmit) {
-            createNewTask();
+            EditTask();
         }
     }, [isSubmit, taskErrors]);
 
@@ -137,8 +115,7 @@ const CreateTaskForm = ({ flag,newFlag, createTaskClick, showForm }) => {
                             <button
                                 className="bg-none p-1 ml-auto border-0 text-red-600 float-right text-2xl leading-none font-semibold hover:bg-red-600 hover:text-white hover:px-1 hover:rounded-md"
                                 onClick={() => {
-                                    showForm()
-                                    createTaskClick()
+                                    editTaskClick()
                                 }}
                             >
                                 X
@@ -175,7 +152,7 @@ const CreateTaskForm = ({ flag,newFlag, createTaskClick, showForm }) => {
                                 <div className="relative h-11 w-full min-w-[200px]">
                                     <input
                                         name="startDate"
-                                        value={taskData.startDate}
+                                        value={taskData.startDate ? new Date(taskData.startDate).toISOString().split('T')[0] : ''} // Convert endDate to ISO string and extract date part
                                         placeholder="Title"
                                         onChange={handleChange}
                                         type="Date"
@@ -188,8 +165,8 @@ const CreateTaskForm = ({ flag,newFlag, createTaskClick, showForm }) => {
                                 <div className="relative h-11 w-full min-w-[200px]">
                                     <input
                                         name="endDate"
-                                        value={taskData.endDate}
-                                        placeholder="Title"
+                                        value={taskData.endDate ? new Date(taskData.endDate).toISOString().split('T')[0] : ''} // Convert endDate to ISO string and extract date part
+                                        placeholder="EndDate"
                                         onChange={handleChange}
                                         type="Date"
                                         className="peer h-full w-full border-b border-blue-gray-200 bg-transparent pt-4 pb-1.5 font-sans text-sm font-normal text-blue-gray-700 outline outline-0 transition-all placeholder-shown:border-blue-gray-200 focus:border-white focus:outline-0 disabled:border-0 disabled:bg-blue-gray-50 placeholder:opacity-0 focus:placeholder:opacity-100"
@@ -202,14 +179,14 @@ const CreateTaskForm = ({ flag,newFlag, createTaskClick, showForm }) => {
                                 <div className="tags flex flex-col gap-5">
                                     <div className="flex flex-wrap w-full h-auto border border-yellow-100 p-2 gap-1">
                                         {
-                                            tagsList.map((ele, ind) => (
+                                            taskData && tagsList.map((ele, ind) => (
                                                 <div
                                                     key={ind}
                                                     className="py-0.5 pl-2 bg-[#7864F4] text-white rounded-xl  justify-between text-xs flex gap-2"
                                                 >
                                                     <div>{ele}</div>
                                                     <div
-                                                        onClick={() => removeTag(ind)}
+                                                        onClick={() => {removeTag(ind)}}
                                                         className="bg-white text-gray-900 flex items-center justify-center rounded-full w-4 cursor-pointer">X</div>
                                                 </div>
                                             ))
@@ -235,7 +212,7 @@ const CreateTaskForm = ({ flag,newFlag, createTaskClick, showForm }) => {
                             <button
                                 className="bg-emerald-500 text-white active:bg-emerald-600 font-bold uppercase text-sm px-4 py-2 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
                                 type="button"
-                                onClick={() => SubmitTask()}
+                                onClick={() => {SubmitTask()}}
                             >
                                 Submit
                             </button>
@@ -245,7 +222,7 @@ const CreateTaskForm = ({ flag,newFlag, createTaskClick, showForm }) => {
             </div>
             <div className="opacity-25 fixed inset-0 z-40 bg-black"></div>
         </>
-    );
-};
+    )
+}
 
-export default CreateTaskForm;
+export default EditTaskForm

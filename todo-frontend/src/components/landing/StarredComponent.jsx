@@ -56,6 +56,7 @@ const StarredComponent = () => {
       </div>
       <div className='taskslists flex gap-3 flex-wrap'>
         {
+          taskList.filter(ele => ele.isStarred === true).length === 0 ? <div>No Starred Tasks</div> : 
           taskList.filter(ele => ele.isStarred === true).map((element, index)=>(
               <Task key={index} task={element} />
           ))

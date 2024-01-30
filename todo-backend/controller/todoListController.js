@@ -211,22 +211,33 @@ exports.deleteTodo = async (req, res, next) => {
     if (!task_id) {
         return res.status(404).json({
             success: false,
-            message: "Task Does not exists",
+            message: "Task Does not exist",
         });
     }
-    const todo = await ToDoList.findOneAndUpdate({ "user": user_id },
+    const todo = await ToDoList.findOneAndUpdate(
+        { "user": user_id },
         { $pull: { "todolist": { _id: task_id } } },
         { new: true }
     );
-    if (!todo || !todo.todolist.some(task => task._id.toString() === task_id.toString())) {
+    // if (!todo || !todo.todolist.some(task => task._id.toString() === task_id.toString())) {
+    //     return res.status(404).json({
+    //         success: false,
+    //         message: "Task not found or User does not exist",
+    //     });
+    // }
+    // Check if the task was successfully deleted
+    const deletedTask = todo.todolist.find(task => task._id.toString() === task_id.toString());
+    if (!deletedTask) {
+        return res.status(200).json({
+            success: true,
+            message: "Task deleted successfully",
+        });
+    } else {
         return res.status(404).json({
             success: false,
-            message: "Task not found or User doesnot exists",
+            message: "Task not found or User does not exist",
         });
     }
-    return res.status(200).json({
-        success: true,
-        message: "Task deleted successfully",
-    });
 }
+
 

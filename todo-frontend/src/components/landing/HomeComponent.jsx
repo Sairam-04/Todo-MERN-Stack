@@ -63,6 +63,8 @@ const HomeComponent = () => {
     return <div>Loading...</div>; // Render loading indicator while data is being fetched
   }
 
+  // console.log("tasklistLEngth",taskList && taskList.length === 0 )
+
   return (
     <>
       <div className='homecomponent py-5 flex flex-col gap-3'>
@@ -70,7 +72,7 @@ const HomeComponent = () => {
           👋 Hello, {name}
         </div>
         {
-          (taskList && taskList.length === 0) ? (
+          (!taskList) ? (
             createtaskbtn ? <CreateTaskForm flag={false} newFlag={true} createTaskClick={createTaskClick} /> : (
               <div className='flex flex-col gap-3'>
                 <div>
