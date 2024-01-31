@@ -19,9 +19,10 @@ const StarredComponent = () => {
           setTaskList(response.data?.todolist);
           setLoading(false); // Set loading to false after data is fetched
         } else {
+          toast.error("Something Went Wrong while Fetching");
         }
       } else {
-        alert("Something Went Wrong");
+        toast.error("Something Went Wrong");
       }
     } catch (err) {
       console.log(err);

@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from "react";
 import postService from "../../services/postService";
 import { endpoint } from "../constants/url";
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const CreateTaskForm = ({ flag,newFlag, createTaskClick, showForm }) => {
     const [taskData, setTaskData] = useState({
@@ -103,16 +105,16 @@ const CreateTaskForm = ({ flag,newFlag, createTaskClick, showForm }) => {
             );
             if (response && response.statusText === "OK") {
                 if (response?.data?.success) {
+                    toast.success( `Created A Task - ${updatedTaskData?.title}`);
                     if (flag) {
                         showForm();
                     }
                     createTaskClick();
-                    alert("Created A Task")
                 } else {
-                    alert("Something Went Wrong");
+                    toast.warning("Something Went Wrong Task is not created")
                 }
             } else {
-                alert("Something Went Wrong");
+                toast.error("Something Went Wrong");
             }
         } catch (error) {
             console.log(error);

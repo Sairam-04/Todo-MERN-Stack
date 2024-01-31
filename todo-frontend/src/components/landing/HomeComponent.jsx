@@ -4,9 +4,12 @@ import CreateTaskForm from './ShowModal';
 import { endpoint } from '../constants/url';
 import getService from '../../services/getService';
 import HomeTasksComponent from './HomeTasksComponent';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const HomeComponent = () => {
   const [createtaskbtn, setCreateTaskBtn] = useState(false);
+  
   const createTaskClick = () => {
     setCreateTaskBtn(!createtaskbtn);
   }
@@ -24,10 +27,10 @@ const HomeComponent = () => {
         if (response?.data?.success) {
           setName(response.data?.user?.name);
         } else {
-          alert("Something Went Wrong");
+          toast.error("Something Went Wrong");
         }
       } else {
-        alert("Something Went Wrong");
+        toast.error("Something Went Wrong");
       }
     } catch (err) {
       console.log(err);
@@ -45,9 +48,10 @@ const HomeComponent = () => {
           setTaskList(response.data?.todolist);
           setLoading(false); // Set loading to false after data is fetched
         } else {
+          toast.error("Something Went Wrong");
         }
       } else {
-        alert("Something Went Wrong");
+        toast.error("Something Went Wrong");
       }
     } catch (err) {
       console.log(err);
@@ -57,7 +61,7 @@ const HomeComponent = () => {
   useEffect(() => {
     getAllTasksList();
     getUserDetails();
-  }, [])
+  }, [createtaskbtn])
 
   if (loading) {
     return <div>Loading...</div>; // Render loading indicator while data is being fetched
@@ -91,6 +95,7 @@ const HomeComponent = () => {
             <HomeTasksComponent createTaskClick={createTaskClick} taskList={taskList} />
           )
         }
+        <ToastContainer />
       </div>
     </>
   )

@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react'
 import putService from '../../services/putService';
 import { endpoint } from '../constants/url';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const EditTaskForm = ({ taskcontent, editTaskClick, taskid }) => {
     const [taskData, setTaskData] = useState(taskcontent)
@@ -82,16 +84,17 @@ const EditTaskForm = ({ taskcontent, editTaskClick, taskid }) => {
                 true
             )
             if (response && response.statusText === "OK") {
-                if (response?.data?.success) {                    
-                    alert("Updated a Task Successfully");
+                if (response?.data?.success) {    
+                    toast.success("Updated a Task Successfully");                
                     editTaskClick()
                 } else {
-                    alert("Something Went Wrong");
+                    toast.error("Something Went Wrong");
                 }
             } else {
-                alert("Something Went Wrong");
+                toast.error("Something Went Wrong");
             }
         } catch (error) {
+            toast.error("Something Went Wrong");
             console.log(error)
         }
     }

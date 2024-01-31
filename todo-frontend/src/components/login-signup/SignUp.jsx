@@ -56,15 +56,29 @@ const SignUp = () => {
     const regex = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/i;
     if (!values.name) {
       errors.name = "Name is Required";
+    } else if (values.name.length < 3) {
+      errors.name = "Name Should have atleast 3 characters"
+    } else if (!/^[a-zA-Z\s]*$/.test(values.name)) {
+      errors.name = "Name must contain only letters and spaces";
     }
+
     if (!values.email) {
       errors.email = "Email is Required";
+    } else if (!/\S+@\S+\.\S+/.test(values.email)) {
+      errors.email = "Invalid email address";
     }
+
     if (!values.phoneNumber) {
       errors.phoneNumber = "Phone Number is Required";
+    } else if (!/^\d+$/.test(values.phoneNumber)) {
+      errors.phoneNumber = "Phone number must contain only digits";
+    }else if(values.phoneNumber.length <10 || values.phoneNumber.length > 10){
+      errors.phoneNumber = "Phone Number must contain only 10 digits"
     }
     if (!values.password) {
       errors.password = "Password is Required";
+    } else if (values.password.length < 8) {
+      errors.password = "Password should contain atleast 8 characters"
     }
     if (
       !values.securityQuestion.question ||

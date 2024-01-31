@@ -4,6 +4,8 @@ import putService from "../../services/putService";
 import { endpoint } from "../constants/url";
 import deleteService from "../../services/deleteService";
 import EditTaskForm from "./EditTaskForm";
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const Task = ({ task }) => {
     const location = useLocation();
@@ -29,12 +31,13 @@ const Task = ({ task }) => {
             )
             if (response && response.statusText === "OK") {
                 if (response.data?.success) {
-                    alert(`Deleted the Task : ${task && task.title} `)
+                    toast.success(`Deleted the Task : ${task && task.title} `)
                 }
             } else {
-                console.log("Something went wrong");
+                toast.error("Something went wrong");
             }
         } catch (error) {
+            toast.error("Something went wrong");
             console.log(error);
         }
     }
@@ -52,15 +55,16 @@ const Task = ({ task }) => {
                 if (response && response.statusText === "OK") {
                     if (response.data?.success) {
                         setStarATask(true)
-                        alert("Starred the Task")
+                        toast.success("Starred the Task")
                     }
                 } else {
-                    console.log("Something went wrong");
+                    toast.error("Something went wrong");
                 }
             } else {
-                alert("Task is Already Starred")
+                toast.warning("Task is Already Starred")
             }
         } catch (error) {
+            toast.error("Something went wrong");
             console.log(error);
         }
     }
@@ -78,15 +82,16 @@ const Task = ({ task }) => {
                 if (response && response.statusText === "OK") {
                     if (response.data?.success) {
                         setCompleteATask(true)
-                        alert("Marked the Task as Completed")
+                        toast.success("Marked the Task as Completed")
                     }
                 } else {
-                    console.log("Something went wrong");
+                    toast.error("Something went wrong");
                 }
             } else {
-                alert("Task is Already Completed")
+                toast.warning("Task is Already Completed")
             }
         } catch (error) {
+            toast.error("Something went wrong");
             console.log(error);
         }
     }
