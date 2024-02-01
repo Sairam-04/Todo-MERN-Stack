@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom';
 import postService from '../../services/postService';
 import { setUser } from '../../utils/localStorage';
+import { endpoint } from '../constants/url';
 
 const Login = () => {
   const navigate = useNavigate();
@@ -10,17 +11,21 @@ const Login = () => {
     password: ""
   })
   const [loginErrors, setLoginErrors] = useState({});
+  const [message, setMessage] = useState("");
   const [isSubmit, setIsSubmit] = useState(false);
-  const validateLoginForm = (values) =>{
+  const validateLoginForm = (values) => {
     const errors = {};
-    const regex = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/i;
     if (!values.email) {
       errors.email = "Email is Required";
+    } else if (!/\S+@\S+\.\S+/.test(values.email)) {
+      errors.email = "Invalid email address";
     }
-    if(!values.password){
+    if (!values.password) {
       errors.password = "Password is Required";
-     }
-     return errors;
+    } else if (values.password.length < 8) {
+      errors.password = "Password should contain atleast 8 characters"
+    }
+    return errors;
   }
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -38,34 +43,36 @@ const Login = () => {
     setIsSubmit(true)
   }
 
-  const checkLogin = async () =>{
-    try{
+  const checkLogin = async () => {
+    try {
       const response = await postService(
-        "http://localhost:5000/api/v1/login",
+        `${endpoint}/login`,
         userData,
         false
       );
       if (response && response.statusText === "OK") {
         if (response?.data?.success) {
-          const { token} = response.data;
+          const { token } = response.data;
           setUser(token);
+          setMessage("");
           navigate("/home");
-        } else {
-          alert("Something Went Wrong");
+        } else if (response?.data?.success === false) {
+          setMessage(response?.data?.message)
         }
       } else {
+        setMessage("Login Failed Email or Password doesnot exist")
         alert("Something Went Wrong");
       }
-    }catch(err){
-      console.log(err);
+    } catch (err) {
+      setMessage("Login Failed Email or Password doesnot exist")
     }
   }
 
-  useEffect(()=>{
-    if(Object.keys(loginErrors).length === 0 && isSubmit){
+  useEffect(() => {
+    if (Object.keys(loginErrors).length === 0 && isSubmit) {
       checkLogin();
     }
-  },[isSubmit, loginErrors])
+  }, [isSubmit, loginErrors])
   return (
     <form
       onSubmit={onLoginSubmit}
@@ -98,11 +105,14 @@ const Login = () => {
           Password
         </label>
         <p className="text-xs text-red-500">{loginErrors.password}</p>
-      </div>
 
+      </div>
+      <p
+        className="text-xs text-red-500"
+      >{message}
+      </p>
       <div className='text-center text-sm text-white'>
         Don't have an Account ? <Link className="text-blue-300" to="/register">Sign Up</Link>
-
       </div>
 
       <div className='Submitbtn text-center'>

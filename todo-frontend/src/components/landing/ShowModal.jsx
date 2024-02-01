@@ -104,7 +104,8 @@ const CreateTaskForm = ({ flag, newFlag, createTaskClick, showForm }) => {
                 toast.error("Something Went Wrong");
             }
         } catch (error) {
-            console.log(error);
+            toast.error("Something Went Wrong");
+
         }
     }
 

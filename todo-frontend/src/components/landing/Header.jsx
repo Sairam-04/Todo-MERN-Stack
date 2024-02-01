@@ -25,7 +25,7 @@ const Header = () => {
         toast.error("Something Went Wrong");
       }
     } catch (err) {
-      console.log(err);
+      toast.error("Something Went Wrong");
     }
   }
   useEffect(() => {

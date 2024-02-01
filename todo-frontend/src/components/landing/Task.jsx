@@ -1,10 +1,6 @@
-import React, { useState } from "react";
+import React from "react";
 import { useLocation } from "react-router-dom"
-import putService from "../../services/putService";
-import { endpoint } from "../constants/url";
-import deleteService from "../../services/deleteService";
 import EditTaskForm from "./EditTaskForm";
-import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 const Task = ({ task, completeTask, completeATask, editTaskClc, editTaskClick, starTask, starATask, deleteTask }) => {

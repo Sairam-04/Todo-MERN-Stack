@@ -1,9 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import usePostService from "../../services/postService";
 import postService from "../../services/postService";
 import { setUser } from "../../utils/localStorage";
-// import UserDetailsCustomHook from "../../context-api/UserDetailsCustomHook";
+import { endpoint } from "../constants/url";
 
 const securityQuestions = [
   "What is your mother's name?",
@@ -102,7 +101,7 @@ const SignUp = () => {
   const postDataToDB = async () => {
     try {
       const response = await postService(
-        "http://localhost:5000/api/v1/register",
+        `${endpoint}/register`,
         userData,
         false
       );
@@ -110,7 +109,6 @@ const SignUp = () => {
         if (response?.data?.success) {
           const { token, user } = response.data;
           setUser(token);
-          // updatePatron(user)
           navigate("/home");
         } else {
           alert("Something Went Wrong");
@@ -119,7 +117,7 @@ const SignUp = () => {
         alert("Something Went Wrong");
       }
     } catch (error) {
-      console.log(error);
+      alert("Something Went Wrong");
     }
   };
   useEffect(() => {

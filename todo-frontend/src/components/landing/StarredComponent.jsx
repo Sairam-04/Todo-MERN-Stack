@@ -1,12 +1,13 @@
-import React,{useEffect, useState} from 'react'
+import React, { useEffect, useState } from 'react'
 import Task from './Task'
 import getService from '../../services/getService';
 import { endpoint } from '../constants/url';
+import Loader from './Loader';
 
 const StarredComponent = () => {
 
   const [taskList, setTaskList] = useState([]);
-  
+
   const [loading, setLoading] = useState(true); // New loading state
   const getAllTasksList = async () => {
     try {
@@ -25,18 +26,20 @@ const StarredComponent = () => {
         toast.error("Something Went Wrong");
       }
     } catch (err) {
-      console.log(err);
+      toast.error("Something Went Wrong");
     }
   }
 
-  useEffect(()=>{
+  useEffect(() => {
     getAllTasksList();
   }, [])
 
   if (loading) {
-    return <div>Loading...</div>; // Render loading indicator while data is being fetched
+    return (
+      <Loader />
+    )
   }
-  
+
   return (
     <div className='py-2 w-full h-[calc(100vh-9.5vh)] overflow-y-auto'>
       <div className='indicators w-full flex gap-3 justify-end px-2 sticky top-0 z-1'>
@@ -57,10 +60,10 @@ const StarredComponent = () => {
       </div>
       <div className='taskslists flex gap-3 flex-wrap'>
         {
-          taskList.filter(ele => ele.isStarred === true).length === 0 ? <div>No Starred Tasks</div> : 
-          taskList.filter(ele => ele.isStarred === true).map((element, index)=>(
+          taskList.filter(ele => ele.isStarred === true).length === 0 ? <div>No Starred Tasks</div> :
+            taskList.filter(ele => ele.isStarred === true).map((element, index) => (
               <Task key={index} task={element} />
-          ))
+            ))
         }
       </div>
     </div>

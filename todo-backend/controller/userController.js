@@ -74,7 +74,6 @@ exports.updateUser = async (req, res, next) => {
 		const newUserData = {
 			name: req.body.name,
 			email: req.body.email,
-			lastName: req.body.lastName,
 			phoneNumber: req.body.phoneNumber
 		}
 		const user = await User.findByIdAndUpdate(user_id, newUserData, {
@@ -82,6 +81,12 @@ exports.updateUser = async (req, res, next) => {
 			runValidators: true,
 			useFindAndModify: true
 		})
+		if(!user){
+			return res.status(200).json({
+				success: false,
+				message: "Failed to update"
+			})
+		}
 		return res.status(200).json({
 			success: true,
 			user
@@ -137,12 +142,18 @@ exports.resetPassword = async (req, res, next) =>{
 		const {answer} = req.body;
 		const isAnswerMatched = await user.compareAnswer(answer);
 		if(!isAnswerMatched){
-			return res.status(400).json({
+			return res.status(200).json({
 				success: false,
 				message: "Security Answer is not matched"
 			})
 		}
 		const {newPassword} = req.body;
+		if(newPassword.length <8){
+			return res.status(200).json({
+				success: false,
+				message:"Password Length should be greater than or equal to 8 characters"
+			})
+		}
 		user.password = await bcrypt.hash(newPassword, 10);
 		user.save();
 

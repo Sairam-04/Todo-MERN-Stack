@@ -8,6 +8,7 @@ import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import deleteService from '../../services/deleteService';
 import putService from '../../services/putService';
+import Loader from './Loader';
 
 const HomeComponent = () => {
   const [createtaskbtn, setCreateTaskBtn] = useState(false);
@@ -42,7 +43,7 @@ const HomeComponent = () => {
         toast.error("Something Went Wrong");
       }
     } catch (err) {
-      console.log(err);
+      toast.error("Something Went Wrong");
     }
   }
 
@@ -63,7 +64,7 @@ const HomeComponent = () => {
         toast.error("Something Went Wrong");
       }
     } catch (err) {
-      console.log(err);
+      toast.error("Something Went Wrong");
     }
   }
 
@@ -83,7 +84,6 @@ const HomeComponent = () => {
       }
     } catch (error) {
       toast.error("Something went wrong");
-      console.log(error);
     }
   }
 
@@ -111,7 +111,6 @@ const HomeComponent = () => {
       }
     } catch (error) {
       toast.error("Something went wrong");
-      console.log(error);
     }
   }
 
@@ -139,7 +138,6 @@ const HomeComponent = () => {
       }
     } catch (error) {
       toast.error("Something went wrong");
-      console.log(error);
     }
   }
 
@@ -149,14 +147,19 @@ const HomeComponent = () => {
   }, [createtaskbtn])
 
   if (loading) {
-    return <div>Loading...</div>; // Render loading indicator while data is being fetched
+    return (
+      <Loader />
+    )
   }
 
   return (
     <>
       <div className='homecomponent py-5 flex flex-col gap-3'>
-        <div className='text-3xl text-center font-bold -tracking-tighter py-2 px-2 w-full flex flex-col gap-1 items-center'>
-          👋 Hello, {name}
+        <div className='text-3xl text-center font-bold -tracking-tighter py-2 px-2 w-full'>
+          👋 Hello, {"   "}
+          <span
+            className='text-transparent bg-clip-text font-extrabold bg-gradient-to-r from-fuchsia-400 to-cyan-300'
+          >{name}</span>
         </div>
         {
           (!taskList) ? (
@@ -180,9 +183,9 @@ const HomeComponent = () => {
               completeTask={completeTask}
               editTaskClc={editTaskClc}
               editTaskClick={editTaskClick}
-              starTask = {starTask}
-              starATask = {starATask}
-              deleteTask = {deleteTask}
+              starTask={starTask}
+              starATask={starATask}
+              deleteTask={deleteTask}
             />
           )
         }

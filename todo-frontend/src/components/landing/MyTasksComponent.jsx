@@ -2,6 +2,9 @@ import React, { useEffect, useState } from 'react'
 import DisplayTasks from "./DisplayTasks";
 import getService from '../../services/getService';
 import { endpoint } from '../constants/url';
+import Loader from './Loader';
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const MyTasksComponent = () => {
   const [taskList, setTaskList] = useState([]);
@@ -17,21 +20,25 @@ const MyTasksComponent = () => {
           setTaskList(response.data?.todolist);
           setLoading(false); // Set loading to false after data is fetched
         } else {
+          toast.error("Something Went Wrong");
+
         }
       } else {
-        alert("Something Went Wrong");
+        toast.error("Something Went Wrong");
       }
     } catch (err) {
-      console.log(err);
+      toast.error("Something Went Wrong");
     }
   }
 
-  useEffect(()=>{
+  useEffect(() => {
     getAllTasksList();
   }, [])
 
   if (loading) {
-    return <div>Loading...</div>; // Render loading indicator while data is being fetched
+    return (
+      <Loader />
+    )
   }
 
   return (

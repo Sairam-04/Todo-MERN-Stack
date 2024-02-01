@@ -14,6 +14,8 @@ const EditTaskForm = ({ taskcontent, editTaskClick, taskid }) => {
         const errors = {};
         if (!values.title) {
             errors.title = "Title is Required";
+        } else if (values.title.length < 5) {
+            errors.title = "Title must atleast contain 5 characters"
         }
         if (!values.desc) {
             errors.desc = "Description is Required";
@@ -21,28 +23,12 @@ const EditTaskForm = ({ taskcontent, editTaskClick, taskid }) => {
         if (!values.startDate) {
             errors.startDate = "Start Date is Required";
         }
-        //  else {
-        //     // Additional check for valid start date if needed
-        //     const startDate = new Date(values.startDate);
-        //     const currentDate = new Date();
-
-        //     if (startDate < currentDate) {
-        //         errors.startDate = "Start Date must be in the future";
-        //     }
-        // }
 
         if (!values.endDate) {
             errors.endDate = "End Date is Required";
+        } else if (new Date(values.endDate) < new Date(values.startDate)) {
+            errors.endDate = "End Date must be greater than the Start Date";
         }
-        // else {
-        //     // Additional check for valid end date if needed
-        //     const endDate = new Date(values.endDate);
-        //     const startDate = new Date(values.startDate);
-
-        //     if (endDate < startDate) {
-        //         errors.endDate = "End Date must be after Start Date";
-        //     }
-        // }
         return errors;
     }
 
@@ -95,7 +81,6 @@ const EditTaskForm = ({ taskcontent, editTaskClick, taskid }) => {
             }
         } catch (error) {
             toast.error("Something Went Wrong");
-            console.log(error)
         }
     }
 
@@ -138,6 +123,7 @@ const EditTaskForm = ({ taskcontent, editTaskClick, taskid }) => {
                                     <label className="after:content[''] pointer-events-none absolute left-0  -top-1.5 flex h-full w-full select-none !overflow-visible truncate text-[11px] font-normal leading-tight text-white transition-all after:absolute after:-bottom-1.5 after:block after:w-full after:scale-x-0 after:border-b-2 after:border-white after:transition-transform after:duration-300 peer-placeholder-shown:text-sm peer-placeholder-shown:leading-[4.25] peer-placeholder-shown:text-blue-gray-500 peer-focus:text-[11px] peer-focus:leading-tight peer-focus:text-white peer-focus:after:scale-x-100 peer-focus:after:border-white peer-disabled:text-transparent peer-disabled:peer-placeholder-shown:text-blue-gray-500">
                                         Title
                                     </label>
+                                    <p className="text-xs text-red-600">{taskErrors.title}</p>
                                 </div>
                                 <div className="relative h-20 w-full min-w-[200px]">
                                     <textarea
@@ -151,6 +137,7 @@ const EditTaskForm = ({ taskcontent, editTaskClick, taskid }) => {
                                     <label className="after:content[''] pointer-events-none absolute left-0  -top-1.5 flex h-full w-full select-none !overflow-visible truncate text-[11px] font-normal leading-tight text-white transition-all after:absolute after:-bottom-1.5 after:block after:w-full after:scale-x-0 after:border-b-2 after:border-white after:transition-transform after:duration-300 peer-placeholder-shown:text-sm peer-placeholder-shown:leading-[4.25] peer-placeholder-shown:text-blue-gray-500 peer-focus:text-[11px] peer-focus:leading-tight peer-focus:text-white peer-focus:after:scale-x-100 peer-focus:after:border-white peer-disabled:text-transparent peer-disabled:peer-placeholder-shown:text-blue-gray-500">
                                         Desc
                                     </label>
+                                    <p className="text-xs text-red-600 mt-[-5px]">{taskErrors.desc}</p>
                                 </div>
                                 <div className="relative h-11 w-full min-w-[200px]">
                                     <input
@@ -164,6 +151,7 @@ const EditTaskForm = ({ taskcontent, editTaskClick, taskid }) => {
                                     <label className="after:content[''] pointer-events-none absolute left-0  -top-1.5 flex h-full w-full select-none !overflow-visible truncate text-[11px] font-normal leading-tight text-white transition-all after:absolute after:-bottom-1.5 after:block after:w-full after:scale-x-0 after:border-b-2 after:border-white after:transition-transform after:duration-300 peer-placeholder-shown:text-sm peer-placeholder-shown:leading-[4.25] peer-placeholder-shown:text-blue-gray-500 peer-focus:text-[11px] peer-focus:leading-tight peer-focus:text-white peer-focus:after:scale-x-100 peer-focus:after:border-white peer-disabled:text-transparent peer-disabled:peer-placeholder-shown:text-blue-gray-500">
                                         Start Date
                                     </label>
+                                    <p className="text-xs text-red-600 mb-3">{taskErrors.startDate}</p>
                                 </div>
                                 <div className="relative h-11 w-full min-w-[200px]">
                                     <input
@@ -177,6 +165,7 @@ const EditTaskForm = ({ taskcontent, editTaskClick, taskid }) => {
                                     <label className="after:content[''] pointer-events-none absolute left-0  -top-1.5 flex h-full w-full select-none !overflow-visible truncate text-[11px] font-normal leading-tight text-white transition-all after:absolute after:-bottom-1.5 after:block after:w-full after:scale-x-0 after:border-b-2 after:border-white after:transition-transform after:duration-300 peer-placeholder-shown:text-sm peer-placeholder-shown:leading-[4.25] peer-placeholder-shown:text-blue-gray-500 peer-focus:text-[11px] peer-focus:leading-tight peer-focus:text-white peer-focus:after:scale-x-100 peer-focus:after:border-white peer-disabled:text-transparent peer-disabled:peer-placeholder-shown:text-blue-gray-500">
                                         End Date
                                     </label>
+                                    <p className="text-xs text-red-600">{taskErrors.endDate}</p>
                                 </div>
 
                                 <div className="tags flex flex-col gap-5">

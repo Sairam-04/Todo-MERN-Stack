@@ -1,6 +1,4 @@
-import React, { useState } from "react";
-import Login from "./Login";
-import SignUp from "./SignUp";
+import React from "react";
 import { Link, Outlet, useLocation } from "react-router-dom";
 import logo from "../../assets/taskLogo.png";
 

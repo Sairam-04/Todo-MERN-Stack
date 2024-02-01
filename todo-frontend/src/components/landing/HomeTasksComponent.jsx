@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import DisplayTasks from "./DisplayTasks";
 import CreateTaskForm from "./ShowModal";
-import HomeComponent from "./HomeComponent";
 
 const HomeTasksComponent = ({
   taskList,
