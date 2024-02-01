@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { endpoint } from '../constants/url';
-import { toast } from 'react-toastify';
+import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import getService from '../../services/getService';
 import postService from '../../services/postService';
@@ -10,7 +10,7 @@ import { useNavigate } from 'react-router-dom';
 
 const Settings = () => {
   const navigate = useNavigate();
-  if(getUser() === null){
+  if (getUser() === null) {
     navigate("/login")
   }
   const [isEditable, setIsEditable] = useState(false);
@@ -289,6 +289,8 @@ const Settings = () => {
           </button>
         </div>
       </div>
+      <ToastContainer />
+
     </div>
   )
 }

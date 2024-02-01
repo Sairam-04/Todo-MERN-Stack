@@ -35,7 +35,7 @@ const MyTasksComponent = () => {
   }
 
   useEffect(() => {
-    if(getUser() === null){
+    if (getUser() === null) {
       navigate("/login")
     }
     getAllTasksList();
@@ -48,9 +48,17 @@ const MyTasksComponent = () => {
   }
 
   return (
-    <div className='py-2'>
-      <DisplayTasks taskList={taskList} />
-    </div>
+    <>
+      {
+        taskList ? (
+          <div className='py-2'>
+            <DisplayTasks taskList={taskList} />
+          </div>
+        ) : (
+          <div className='text-center font-bold text-2xl py-6'>No Tasks Available to show</div>
+        )
+      }
+    </>
   )
 }
 
