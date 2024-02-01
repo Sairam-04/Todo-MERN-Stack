@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import postService from "../../services/postService";
-import { setUser } from "../../utils/localStorage";
+import { getUser, setUser } from "../../utils/localStorage";
 import { endpoint } from "../constants/url";
 
 const securityQuestions = [
@@ -17,6 +17,11 @@ const securityQuestions = [
 
 const SignUp = () => {
   const navigate = useNavigate();
+  useEffect(()=>{
+    if(!(getUser() === null)){
+      navigate("/home")
+    }
+  },[]);
   const [userData, setUserData] = useState({
     name: "",
     email: "",
