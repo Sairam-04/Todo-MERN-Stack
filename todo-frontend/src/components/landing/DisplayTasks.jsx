@@ -2,7 +2,7 @@ import React, { useEffect } from "react";
 import Task from "./Task";
 import { useLocation } from "react-router-dom";
 
-const DisplayTasks = ({ taskList }) => {
+const DisplayTasks = ({ taskList, completeTask, completeATask, editTaskClc, editTaskClick, starTask, starATask, deleteTask }) => {
     const todayDate = new Date();
     const completedList = taskList && taskList.filter(element => element.isCompleted === true);
     const inprogressList = taskList && taskList.filter(element => {
@@ -38,11 +38,19 @@ const DisplayTasks = ({ taskList }) => {
                 <div className="inprogress w-[32%] h-full overflow-y-auto">
                     <div className="taskslist flex flex-col gap-3">
                         {
-                            inprogressList.length === 0 ? <div className="">
+                            inprogressList.length === 0 ? <div className="text-center">
                                 No InProgress Tasks
                             </div> :
                                 inprogressList.map((element, index) => (
-                                    <Task key={index} task={element} />
+                                    <Task key={index} task={element}
+                                        completeATask={completeATask}
+                                        completeTask={completeTask}
+                                        editTaskClc={editTaskClc}
+                                        editTaskClick={editTaskClick}
+                                        starTask={starTask}
+                                        starATask={starATask}
+                                        deleteTask = {deleteTask}
+                                    />
                                 ))
                         }
 
@@ -52,11 +60,19 @@ const DisplayTasks = ({ taskList }) => {
 
                     <div className="taskslist flex flex-col gap-3">
                         {
-                            completedList.length === 0 ? <div className="">
+                            completedList.length === 0 ? <div className="text-center">
                                 No Completed Tasks
                             </div> :
                                 completedList.map((element, index) => (
-                                    <Task key={index} task={element} />
+                                    <Task key={index} task={element}
+                                        completeATask={completeATask}
+                                        completeTask={completeTask}
+                                        editTaskClc={editTaskClc}
+                                        editTaskClick={editTaskClick}
+                                        starTask={starTask}
+                                        starATask={starATask}
+                                        deleteTask = {deleteTask}
+                                    />
                                 ))
                         }
 
@@ -66,11 +82,19 @@ const DisplayTasks = ({ taskList }) => {
 
                     <div className="taskslist flex flex-col gap-3">
                         {
-                            pendingList.length === 0 ? <div>
+                            pendingList.length === 0 ? <div className="text-center">
                                 No Pending Tasks
                             </div> :
                                 pendingList.map((element, index) => (
-                                    <Task key={index} task={element} />
+                                    <Task key={index} task={element}
+                                        completeATask={completeATask}
+                                        completeTask={completeTask}
+                                        editTaskClc={editTaskClc}
+                                        editTaskClick={editTaskClick}
+                                        starTask={starTask}
+                                        starATask={starATask}
+                                        deleteTask = {deleteTask}
+                                    />
                                 ))
                         }
                     </div>

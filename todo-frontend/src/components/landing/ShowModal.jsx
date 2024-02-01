@@ -4,7 +4,8 @@ import { endpoint } from "../constants/url";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
-const CreateTaskForm = ({ flag,newFlag, createTaskClick, showForm }) => {
+const CreateTaskForm = ({ flag, newFlag, createTaskClick, showForm }) => {
+    const todayDate = new Date();
     const [taskData, setTaskData] = useState({
         title: "",
         desc: "",
@@ -22,6 +23,8 @@ const CreateTaskForm = ({ flag,newFlag, createTaskClick, showForm }) => {
         const errors = {};
         if (!values.title) {
             errors.title = "Title is Required";
+        } else if (values.title.length < 5) {
+            errors.title = "Title must atleast contain 5 characters"
         }
         if (!values.desc) {
             errors.desc = "Description is Required";
@@ -29,28 +32,12 @@ const CreateTaskForm = ({ flag,newFlag, createTaskClick, showForm }) => {
         if (!values.startDate) {
             errors.startDate = "Start Date is Required";
         }
-        //  else {
-        //     // Additional check for valid start date if needed
-        //     const startDate = new Date(values.startDate);
-        //     const currentDate = new Date();
-
-        //     if (startDate < currentDate) {
-        //         errors.startDate = "Start Date must be in the future";
-        //     }
-        // }
 
         if (!values.endDate) {
             errors.endDate = "End Date is Required";
+        } else if (new Date(values.endDate) < new Date(values.startDate)) {
+            errors.endDate = "End Date must be greater than the Start Date";
         }
-        // else {
-        //     // Additional check for valid end date if needed
-        //     const endDate = new Date(values.endDate);
-        //     const startDate = new Date(values.startDate);
-
-        //     if (endDate < startDate) {
-        //         errors.endDate = "End Date must be after Start Date";
-        //     }
-        // }
         return errors;
     }
 
@@ -92,7 +79,7 @@ const CreateTaskForm = ({ flag,newFlag, createTaskClick, showForm }) => {
     const createNewTask = async () => {
         try {
             const updatedTaskData = { ...taskData, tags: tagsList };
-            const url = newFlag ? `${endpoint}/new-todo` :`${endpoint}/add-todo`;
+            const url = newFlag ? `${endpoint}/new-todo` : `${endpoint}/add-todo`;
             const DATA = newFlag ? {
                 todolist: [
                     updatedTaskData
@@ -105,7 +92,7 @@ const CreateTaskForm = ({ flag,newFlag, createTaskClick, showForm }) => {
             );
             if (response && response.statusText === "OK") {
                 if (response?.data?.success) {
-                    toast.success( `Created A Task - ${updatedTaskData?.title}`);
+                    toast.success(`Created A Task - ${updatedTaskData?.title}`);
                     if (flag) {
                         showForm();
                     }
@@ -160,6 +147,7 @@ const CreateTaskForm = ({ flag,newFlag, createTaskClick, showForm }) => {
                                     <label className="after:content[''] pointer-events-none absolute left-0  -top-1.5 flex h-full w-full select-none !overflow-visible truncate text-[11px] font-normal leading-tight text-white transition-all after:absolute after:-bottom-1.5 after:block after:w-full after:scale-x-0 after:border-b-2 after:border-white after:transition-transform after:duration-300 peer-placeholder-shown:text-sm peer-placeholder-shown:leading-[4.25] peer-placeholder-shown:text-blue-gray-500 peer-focus:text-[11px] peer-focus:leading-tight peer-focus:text-white peer-focus:after:scale-x-100 peer-focus:after:border-white peer-disabled:text-transparent peer-disabled:peer-placeholder-shown:text-blue-gray-500">
                                         Title
                                     </label>
+                                    <p className="text-xs text-red-600">{taskErrors.title}</p>
                                 </div>
                                 <div className="relative h-20 w-full min-w-[200px]">
                                     <textarea
@@ -173,6 +161,7 @@ const CreateTaskForm = ({ flag,newFlag, createTaskClick, showForm }) => {
                                     <label className="after:content[''] pointer-events-none absolute left-0  -top-1.5 flex h-full w-full select-none !overflow-visible truncate text-[11px] font-normal leading-tight text-white transition-all after:absolute after:-bottom-1.5 after:block after:w-full after:scale-x-0 after:border-b-2 after:border-white after:transition-transform after:duration-300 peer-placeholder-shown:text-sm peer-placeholder-shown:leading-[4.25] peer-placeholder-shown:text-blue-gray-500 peer-focus:text-[11px] peer-focus:leading-tight peer-focus:text-white peer-focus:after:scale-x-100 peer-focus:after:border-white peer-disabled:text-transparent peer-disabled:peer-placeholder-shown:text-blue-gray-500">
                                         Desc
                                     </label>
+                                    <p className="text-xs text-red-600 mt-[-5px]">{taskErrors.desc}</p>
                                 </div>
                                 <div className="relative h-11 w-full min-w-[200px]">
                                     <input
@@ -186,6 +175,8 @@ const CreateTaskForm = ({ flag,newFlag, createTaskClick, showForm }) => {
                                     <label className="after:content[''] pointer-events-none absolute left-0  -top-1.5 flex h-full w-full select-none !overflow-visible truncate text-[11px] font-normal leading-tight text-white transition-all after:absolute after:-bottom-1.5 after:block after:w-full after:scale-x-0 after:border-b-2 after:border-white after:transition-transform after:duration-300 peer-placeholder-shown:text-sm peer-placeholder-shown:leading-[4.25] peer-placeholder-shown:text-blue-gray-500 peer-focus:text-[11px] peer-focus:leading-tight peer-focus:text-white peer-focus:after:scale-x-100 peer-focus:after:border-white peer-disabled:text-transparent peer-disabled:peer-placeholder-shown:text-blue-gray-500">
                                         Start Date
                                     </label>
+                                    <p className="text-xs text-red-600 mb-3">{taskErrors.startDate}</p>
+
                                 </div>
                                 <div className="relative h-11 w-full min-w-[200px]">
                                     <input
@@ -199,24 +190,30 @@ const CreateTaskForm = ({ flag,newFlag, createTaskClick, showForm }) => {
                                     <label className="after:content[''] pointer-events-none absolute left-0  -top-1.5 flex h-full w-full select-none !overflow-visible truncate text-[11px] font-normal leading-tight text-white transition-all after:absolute after:-bottom-1.5 after:block after:w-full after:scale-x-0 after:border-b-2 after:border-white after:transition-transform after:duration-300 peer-placeholder-shown:text-sm peer-placeholder-shown:leading-[4.25] peer-placeholder-shown:text-blue-gray-500 peer-focus:text-[11px] peer-focus:leading-tight peer-focus:text-white peer-focus:after:scale-x-100 peer-focus:after:border-white peer-disabled:text-transparent peer-disabled:peer-placeholder-shown:text-blue-gray-500">
                                         End Date
                                     </label>
+                                    <p className="text-xs text-red-600">{taskErrors.endDate}</p>
                                 </div>
 
                                 <div className="tags flex flex-col gap-5">
-                                    <div className="flex flex-wrap w-full h-auto border border-yellow-100 p-2 gap-1">
-                                        {
-                                            tagsList.map((ele, ind) => (
-                                                <div
-                                                    key={ind}
-                                                    className="py-0.5 pl-2 bg-[#7864F4] text-white rounded-xl  justify-between text-xs flex gap-2"
-                                                >
-                                                    <div>{ele}</div>
-                                                    <div
-                                                        onClick={() => removeTag(ind)}
-                                                        className="bg-white text-gray-900 flex items-center justify-center rounded-full w-4 cursor-pointer">X</div>
-                                                </div>
-                                            ))
-                                        }
-                                    </div>
+                                    {
+                                        tagsList && tagsList.length > 0 && (
+                                            <div className="flex flex-wrap w-full h-auto border border-yellow-100 p-2 gap-1">
+                                                {
+                                                    tagsList.map((ele, ind) => (
+                                                        <div
+                                                            key={ind}
+                                                            className="py-0.5 pl-2 bg-[#7864F4] text-white rounded-xl  justify-between text-xs flex gap-2"
+                                                        >
+                                                            <div>{ele}</div>
+                                                            <div
+                                                                onClick={() => removeTag(ind)}
+                                                                className="bg-white text-gray-900 flex items-center justify-center rounded-full w-4 cursor-pointer">X</div>
+                                                        </div>
+                                                    ))
+                                                }
+                                            </div>
+
+                                        )
+                                    }
                                     <div className="relative h-11 w-full min-w-[200px]">
                                         <input
                                             name="tag"

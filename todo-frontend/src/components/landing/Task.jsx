@@ -7,7 +7,7 @@ import EditTaskForm from "./EditTaskForm";
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
-const Task = ({ task }) => {
+const Task = ({ task, completeTask, completeATask, editTaskClc, editTaskClick, starTask, starATask, deleteTask }) => {
     const location = useLocation();
     const todayDate = new Date();
     const inprogress = task && new Date(task.endDate) > todayDate && task.isCompleted === false;
@@ -15,89 +15,14 @@ const Task = ({ task }) => {
     const pending = task && task.isCompleted === false && new Date(task.endDate) < todayDate;
     const star = task && task.isStarred === true;
     const task_id = task && task._id;
-    const [starATask, setStarATask] = useState(false);
-    const [completeATask, setCompleteATask] = useState(false);
-    const [editTaskClick, setEditTaskClick] = useState(false);
-    
-    const editTaskClc = () => {
-        setEditTaskClick(!editTaskClick)
-    }
-
-    const deleteTask = async () => {
-        try {
-            const response = await deleteService(
-                `${endpoint}/delete-todo/${task_id}`,
-                true
-            )
-            if (response && response.statusText === "OK") {
-                if (response.data?.success) {
-                    toast.success(`Deleted the Task : ${task && task.title} `)
-                }
-            } else {
-                toast.error("Something went wrong");
-            }
-        } catch (error) {
-            toast.error("Something went wrong");
-            console.log(error);
-        }
-    }
-
-    const starTask = async () => {
-        try {
-            if (!star) {
-                const response = await putService(
-                    `${endpoint}/update-todo/${task_id}`,
-                    {
-                        isStarred: true
-                    },
-                    true
-                )
-                if (response && response.statusText === "OK") {
-                    if (response.data?.success) {
-                        setStarATask(true)
-                        toast.success("Starred the Task")
-                    }
-                } else {
-                    toast.error("Something went wrong");
-                }
-            } else {
-                toast.warning("Task is Already Starred")
-            }
-        } catch (error) {
-            toast.error("Something went wrong");
-            console.log(error);
-        }
-    }
-
-    const completeTask = async () => {
-        try {
-            if (!completed) {
-                const response = await putService(
-                    `${endpoint}/update-todo/${task_id}`,
-                    {
-                        isCompleted: true
-                    },
-                    true
-                )
-                if (response && response.statusText === "OK") {
-                    if (response.data?.success) {
-                        setCompleteATask(true)
-                        toast.success("Marked the Task as Completed")
-                    }
-                } else {
-                    toast.error("Something went wrong");
-                }
-            } else {
-                toast.warning("Task is Already Completed")
-            }
-        } catch (error) {
-            toast.error("Something went wrong");
-            console.log(error);
-        }
+    const formatDate = (dateString) => {
+        const date = new Date(dateString);
+        const options = { month: 'short', day: 'numeric', year: 'numeric' };
+        return date.toLocaleDateString('en-US', options);
     }
     return (
         <>
-            <div className="flex text-sm w-full bg-[#323539] shadow-md">
+            <div className="flex text-sm w-full bg-[#323539] custom-shadow rounded-2xl">
                 {
                     location.pathname.includes("starred") && (
                         <>
@@ -134,21 +59,26 @@ const Task = ({ task }) => {
                         {<span>{task && task.endDate}</span>}
 
                     </div>
-                    <div className="bottomPart flex border-t pt-2 justify-end gap-3">
-                        <i className="bi bi-pencil-square cursor-pointer hover:scale-[1.5]"
-                            onClick={() => editTaskClc()}
-                        ></i>
-                        <i className="bi bi-trash-fill cursor-pointer hover:scale-[1.5]"
-                            onClick={() => deleteTask()}
-                        ></i>
-                        <i
-                            onClick={() => starTask()}
-                            className={`bi bi-star-fill cursor-pointer hover:scale-[1.5] ${starATask || star ? "text-yellow-500" : "text-white"}`}></i>
-                        <i
-                            onClick={() => completeTask()}
-                            className={`bi bi-check-circle-fill cursor-pointer hover:scale-[1.5] ${completeATask || completed ? "text-green-600" : "text-white"}`}
-                        > </i>
-                    </div>
+                    {
+                        location.pathname.includes('my-tasks') || location.pathname.includes('starred') ?
+                            <></> : (
+                                <div className="bottomPart flex border-t pt-2 justify-end gap-3">
+                                    <i className="bi bi-pencil-square cursor-pointer hover:scale-[1.5]"
+                                        onClick={() => editTaskClc()}
+                                    ></i>
+                                    <i className="bi bi-trash-fill cursor-pointer hover:scale-[1.5]"
+                                        onClick={() => deleteTask(task_id)}
+                                    ></i>
+                                    <i
+                                        onClick={() => starTask(task_id, star)}
+                                        className={`bi bi-star-fill cursor-pointer hover:scale-[1.5] ${starATask || star ? "text-yellow-500" : "text-white"}`}></i>
+                                    <i
+                                        onClick={() => completeTask(completed, task_id)}
+                                        className={`bi bi-check-circle-fill cursor-pointer hover:scale-[1.5] ${completeATask || completed ? "text-green-600" : "text-white"}`}
+                                    > </i>
+                                </div>
+                            )
+                    }
                 </div>
             </div>
 
