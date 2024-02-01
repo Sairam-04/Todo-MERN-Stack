@@ -1,11 +1,17 @@
 import React from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import logo from "../../assets/taskLogo.png"
+import { removeUser } from '../../utils/localStorage';
 
 const SideBar = () => {
+    const navigate = useNavigate()
     const location = useLocation();
+    const logout = () =>{
+        removeUser();
+        navigate("/login");
+    }
     return (
-        <div className='sidebar bg-[#1B1D21] flex flex-col gap-6 h-full px-2 py-3 text-[#6C717B]'>
+        <div className='sidebar bg-[#0f1114] flex flex-col gap-6 h-full px-2 py-3 text-[#6C717B]'>
             <div className="logo">
                 <img src={logo} className='h-10 w-100' alt='Logo'></img>
             </div>
@@ -53,14 +59,16 @@ const SideBar = () => {
                     </Link>
                 </li>
                 <li className='flex gap-3'>
-                    <Link to="/" className='flex gap-3'>
+                    <div
+                        onClick={() => logout()}
+                        className='flex gap-3 cursor-pointer'>
                         <div>
                             <i className="bi bi-box-arrow-right"></i>
                         </div>
                         <div>
                             Logout
                         </div>
-                    </Link>
+                    </div>
                 </li>
             </ul>
         </div>

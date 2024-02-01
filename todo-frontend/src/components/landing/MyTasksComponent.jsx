@@ -5,8 +5,11 @@ import { endpoint } from '../constants/url';
 import Loader from './Loader';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { getUser } from '../../utils/localStorage';
+import { useNavigate } from 'react-router-dom';
 
 const MyTasksComponent = () => {
+  const navigate = useNavigate();
   const [taskList, setTaskList] = useState([]);
   const [loading, setLoading] = useState(true); // New loading state
   const getAllTasksList = async () => {
@@ -32,6 +35,9 @@ const MyTasksComponent = () => {
   }
 
   useEffect(() => {
+    if(getUser() === null){
+      navigate("/login")
+    }
     getAllTasksList();
   }, [])
 

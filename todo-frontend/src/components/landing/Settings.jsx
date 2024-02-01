@@ -5,8 +5,14 @@ import 'react-toastify/dist/ReactToastify.css';
 import getService from '../../services/getService';
 import postService from '../../services/postService';
 import putService from '../../services/putService';
+import { getUser } from '../../utils/localStorage';
+import { useNavigate } from 'react-router-dom';
 
 const Settings = () => {
+  const navigate = useNavigate();
+  if(getUser() === null){
+    navigate("/login")
+  }
   const [isEditable, setIsEditable] = useState(false);
 
   const [user, setUser] = useState({})
