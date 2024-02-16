@@ -116,10 +116,9 @@ const SignUp = () => {
           setUser(token);
           navigate("/home");
         } else {
-          alert("Something Went Wrong");
         }
       } else {
-        alert("Something Went Wrong");
+        // alert("Something Went Wrong");
       }
     } catch (error) {
       alert("Something Went Wrong");

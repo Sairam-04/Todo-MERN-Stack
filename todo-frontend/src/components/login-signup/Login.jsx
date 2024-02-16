@@ -66,9 +66,9 @@ const Login = () => {
         }
       } else {
         setMessage("Login Failed Email or Password doesnot exist")
-        alert("Something Went Wrong");
       }
     } catch (err) {
+      console.log(err)
       setMessage("Login Failed Email or Password doesnot exist")
     }
   }
