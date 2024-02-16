@@ -110,7 +110,7 @@ const SignUp = () => {
         userData,
         false
       );
-      if (response && response.statusText === "OK") {
+      if (response) {
         if (response?.data?.success) {
           const { token, user } = response.data;
           setUser(token);
@@ -118,7 +118,7 @@ const SignUp = () => {
         } else {
         }
       } else {
-        // alert("Something Went Wrong");
+        alert("Something Went Wrong");
       }
     } catch (error) {
       alert("Something Went Wrong");

@@ -73,7 +73,7 @@ const Settings = () => {
         passwordResetData,
         true
       );
-      if (response && response.statusText === "OK") {
+      if (response) {
         if (response?.data?.success) {
           setPasswordResetData({
             answer: "",
@@ -98,7 +98,7 @@ const Settings = () => {
         `${endpoint}/me`,
         true
       );
-      if (response && response.statusText === "OK") {
+      if (response) {
         if (response?.data?.success) {
           setUser({
             name: response.data?.user?.name || "",
@@ -140,7 +140,7 @@ const Settings = () => {
         user,
         true
       );
-      if (response && response.statusText === "OK") {
+      if (response) {
         if (response?.data?.success) {
           toast.success("Successfully Updated Details")
         } else {

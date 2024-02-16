@@ -15,7 +15,7 @@ const Header = () => {
         `${endpoint}/me`,
         true
       );
-      if (response && response.statusText === "OK") {
+      if (response) {
         if (response?.data?.success) {
           setInitial(response.data?.user?.name);
         } else {

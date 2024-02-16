@@ -69,7 +69,7 @@ const EditTaskForm = ({ taskcontent, editTaskClick, taskid }) => {
                 updatedTaskData,
                 true
             )
-            if (response && response.statusText === "OK") {
+            if (response && response.status >=200 && response.status <=300) {
                 if (response?.data?.success) {    
                     toast.success("Updated a Task Successfully");                
                     editTaskClick()
