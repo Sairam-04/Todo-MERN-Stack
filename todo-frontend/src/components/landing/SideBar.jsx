@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
-import logo from "../../assets/taskLogo.png"
+import logo from "../../assets/Logo.svg"
 import { removeUser } from '../../utils/localStorage';
 
 const SideBar = () => {
@@ -12,8 +12,9 @@ const SideBar = () => {
     }
     return (
         <div className='sidebar bg-[#0f1114] flex flex-col gap-6 h-full px-2 py-3 text-[#6C717B]'>
-            <div className="logo">
+            <div className="logo flex gap-3 items-center">
                 <img src={logo} className='h-10 w-100' alt='Logo'></img>
+                <div className='text-xl text-white font-medium'> Task Buddy </div>
             </div>
 
             <ul className='sidebarlist py-4 flex flex-col gap-3'>

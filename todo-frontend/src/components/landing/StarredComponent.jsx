@@ -16,7 +16,7 @@ const StarredComponent = () => {
         `${endpoint}/get-todo-list`,
         true
       );
-      if (response && response.statusText === "OK") {
+      if (response) {
         if (response?.data?.success) {
           setTaskList(response.data?.todolist);
           setLoading(false); // Set loading to false after data is fetched

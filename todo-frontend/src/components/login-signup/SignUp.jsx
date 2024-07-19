@@ -110,7 +110,7 @@ const SignUp = () => {
         userData,
         false
       );
-      if (response && response.statusText === "OK") {
+      if (response) {
         if (response?.data?.success) {
           const { token, user } = response.data;
           setUser(token);
