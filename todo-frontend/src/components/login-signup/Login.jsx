@@ -70,7 +70,7 @@ const Login = () => {
         setMessage("Login Failed Email or Password doesnot exist")
         alert("Something Went Wrong");
       }
-    } catch (err) {
+    }}catch (err) {
       setMessage("Login Failed Email or Password doesnot exist")
     }
   }
