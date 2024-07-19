@@ -56,6 +56,7 @@ const Login = () => {
         false
       );
       if (response) {
+      if (response) {
         if (response?.data?.success) {
           const { token } = response.data;
           setUser(token);
@@ -67,7 +68,7 @@ const Login = () => {
       } else {
         console.log(response)
         setMessage("Login Failed Email or Password doesnot exist")
-        // alert("Something Went Wrong");
+        alert("Something Went Wrong");
       }
     } catch (err) {
       setMessage("Login Failed Email or Password doesnot exist")

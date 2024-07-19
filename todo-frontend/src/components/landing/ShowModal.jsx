@@ -90,7 +90,7 @@ const CreateTaskForm = ({ flag, newFlag, createTaskClick, showForm }) => {
                 DATA,
                 true
             );
-            if (response && response.statusText === "OK") {
+            if (response) {
                 if (response?.data?.success) {
                     toast.success(`Created A Task - ${updatedTaskData?.title}`);
                     if (flag) {
